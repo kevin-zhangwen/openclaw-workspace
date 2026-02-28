@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工作汇报示例 - frontend-slides-cn</title>
+  
+  <!-- 中文字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ===========================================
+       核心样式 - 视口适配（必须）
+       =========================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      height: 100%;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      height: 100%;
+      font-family: 'Noto Sans SC', sans-serif;
+      overflow-x: hidden;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+
+    /* ===========================================
+       幻灯片容器
+       =========================================== */
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      padding: clamp(1.5rem, 4vw, 4rem);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    /* ===========================================
+       配色方案 - 简洁商务风
+       =========================================== */
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent: #3b82f6;
+      --accent-light: #60a5fa;
+      --success: #10b981;
+    }
+
+    /* ===========================================
+       排版样式
+       =========================================== */
+    h1 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0.05em;
+      margin-bottom: clamp(0.5rem, 2vw, 1.5rem);
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: clamp(1rem, 2vw, 2rem);
+    }
+
+    h3 {
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+      font-weight: 600;
+      color: var(--accent-light);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+      line-height: 1.8;
+      color: var(--text-secondary);
+      padding: 0.5rem 0;
+      padding-left: 2rem;
+      position: relative;
+    }
+
+    li::before {
+      content: '▸';
+      color: var(--accent);
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    /* ===========================================
+       卡片样式
+       =========================================== */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: clamp(1rem, 3vw, 2rem);
+      backdrop-filter: blur(10px);
+      margin: 1rem 0;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+      gap: clamp(1rem, 2vw, 2rem);
+      margin: 2rem 0;
+    }
+
+    /* ===========================================
+       图表容器
+       =========================================== */
+    .chart-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    /* 柱状图 */
+    .bar-chart-vertical {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      height: 300px;
+      position: relative;
+    }
+
+    .bar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bar {
+      width: 60px;
+      background: linear-gradient(180deg, var(--accent) 0%, #1d4ed8 100%);
+      border-radius: 8px 8px 0 0;
+      transition: height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .bar-value {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+
+    .bar-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ===========================================
+       动画效果
+       =========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .slide.visible .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal:nth-child(1) { transition-delay: 0.1s; }
+    .reveal:nth-child(2) { transition-delay: 0.2s; }
+    .reveal:nth-child(3) { transition-delay: 0.3s; }
+    .reveal:nth-child(4) { transition-delay: 0.4s; }
+    .reveal:nth-child(5) { transition-delay: 0.5s; }
+
+    /* ===========================================
+       导航元素
+       =========================================== */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1000;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .nav-dots {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1000;
+    }
+
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-dot.active {
+      background: var(--accent);
+      transform: scale(1.2);
+    }
+
+    .export-pdf {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .export-pdf:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+
+    /* ===========================================
+       响应式适配
+       =========================================== */
+    @media (max-height: 700px) {
+      .slide {
+        padding: clamp(1rem, 3vw, 2rem);
+      }
+      
+      h1 {
+        font-size: clamp(1.5rem, 5vw, 3rem);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-dots {
+        display: none;
+      }
+      
+      .bar {
+        width: 40px;
+      }
+    }
+
+    /* ===========================================
+       打印样式 (PDF 导出)
+       =========================================== */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+      
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      
+      .slide {
+        height: 100vh;
+        page-break-after: always;
+        break-after: page;
+      }
+      
+      .nav-dots, .progress-bar, .export-pdf {
+        display: none !important;
+      }
+      
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 进度条 -->
+  <div class="progress-bar">
+    <div class="progress-fill"></div>
+  </div>
+
+  <!-- 导航点 -->
+  <nav class="nav-dots"></nav>
+
+  <!-- PDF 导出按钮 -->
+  <button class="export-pdf" onclick="window.print()">📄 导出 PDF</button>
+
+  <!-- 幻灯片 1: 封面 -->
+  <section class="slide title-slide">
+    <div class="slide-content">
+      <h1 class="reveal">2026 年 Q1 工作汇报</h1>
+      <p class="reveal">汇报部门：技术部</p>
+      <p class="reveal">汇报日期：2026 年 2 月</p>
+    </div>
+  </section>
+
+  <!-- 幻灯片 2: 目录 -->
+  <section class="slide">
+    <div class="slide-content">
+      <h2 class="reveal">目录</h2>
+      <ul class="reveal">
+        <li>核心成果摘要</li>
+        <li>项目进展汇报</li>
+        <li>关键数据展示</li>
+        <li>问题与挑战</li>
+        <li>下季度计划</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 幻灯片 3: 核心成果 -->
+  <section class="slide">
+    <div class="slide-content">
+      <h2 class="reveal">核心成果摘要</h2>
+      <div class="card-grid reveal">
+        <div class="card">
+          <h3>📊 业绩增长</h3>
+          <p>季度营收同比增长 45%</p>
+        </div>
+        <div class="card">
+          <h3>🚀 产品迭代</h3>
+          <p>完成 3 个 major 版本发布</p>
+        </div>
+        <div class="card">
+          <h3>👥 团队扩张</h3>
+          <p>新增 15 名技术成员</p>
+        </div>
+        <div class="card">
+          <h3>⚡ 性能优化</h3>
+          <p>系统响应速度提升 60%</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 幻灯片 4: 数据展示 - 柱状图 -->
+  <section class="slide">
+    <div class="slide-content">
+      <h2 class="reveal">季度业绩对比</h2>
+      <div class="chart-container reveal">
+        <canvas id="barChart" width="700" height="350"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- 幻灯片 5: 数据展示 - 饼图 -->
+  <section class="slide">
+    <div class="slide-content">
+      <h2 class="reveal">收入来源分布</h2>
+      <div class="chart-container reveal">
+        <canvas id="pieChart" width="400" height="400"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- 幻灯片 6: 问题与挑战 -->
+  <section class="slide">
+    <div class="slide-content">
+      <h2 class="reveal">问题与挑战</h2>
+      <div class="card reveal">
+        <ul>
+          <li>技术债务积累，需要安排重构周期</li>
+          <li>跨部门协作效率有待提升</li>
+          <li>关键岗位人才招聘进度缓慢</li>
+          <li>基础设施成本增长较快</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 幻灯片 7: 下季度计划 -->
+  <section class="slide">
+    <div class="slide-content">
+      <h2 class="reveal">Q2 工作计划</h2>
+      <div class="card reveal">
+        <ul>
+          <li>完成核心系统架构升级</li>
+          <li>推出 AI 智能助手功能</li>
+          <li>建立完善的监控告警体系</li>
+          <li>开展 2 次技术分享培训</li>
+          <li>优化 CI/CD流程，提升交付效率</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 幻灯片 8: 结束页 -->
+  <section class="slide">
+    <div class="slide-content">
+      <h1 class="reveal">感谢聆听</h1>
+      <p class="reveal">Q&A 环节</p>
+    </div>
+  </section>
+
+  <script>
+    // ===========================================
+    // 图表生成代码（简化版）
+    // ===========================================
+    
+    // 柱状图
+    function drawBarChart() {
+      const canvas = document.getElementById('barChart');
+      const ctx = canvas.getContext('2d');
+      const data = {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        values: [85, 72, 90, 65]
+      };
+      
+      const maxValue = Math.max(...data.values);
+      const padding = 60;
+      const width = canvas.width - padding * 2;
+      const height = canvas.height - padding * 2;
+      
+      // 绘制背景
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // 绘制柱子
+      const barWidth = width / data.values.length * 0.6;
+      data.values.forEach((value, index) => {
+        const x = padding + (width / data.values.length) * index + barWidth / 2;
+        const barHeight = (value / maxValue) * height;
+        const y = padding + height - barHeight;
+        
+        // 渐变
+        const gradient = ctx.createLinearGradient(x, y, x, y + barHeight);
+        gradient.addColorStop(0, '#60a5fa');
+        gradient.addColorStop(1, '#3b82f6');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.roundRect(x - barWidth / 2, y, barWidth, barHeight, [8, 8, 0, 0]);
+        ctx.fill();
+        
+        // 数值标签
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 14px "Noto Sans SC"';
+        ctx.textAlign = 'center';
+        ctx.fillText(value, x, y - 10);
+        
+        // X 轴标签
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText(data.labels[index], x, canvas.height - padding + 25);
+      });
+    }
+    
+    // 饼图
+    function drawPieChart() {
+      const canvas = document.getElementById('pieChart');
+      const ctx = canvas.getContext('2d');
+      const data = {
+        labels: ['产品销售', '服务收入', '授权费用', '其他'],
+        values: [45, 30, 15, 10]
+      };
+      
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = Math.min(centerX, centerY) - 60;
+      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+      
+      const total = data.values.reduce((sum, val) => sum + val, 0);
+      let startAngle = -Math.PI / 2;
+      
+      data.values.forEach((value, index) => {
+        const sliceAngle = (value / total) * 2 * Math.PI;
+        
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+        ctx.closePath();
+        ctx.fillStyle = colors[index];
+        ctx.fill();
+        
+        // 百分比标签
+        const midAngle = startAngle + sliceAngle / 2;
+        const labelX = centerX + Math.cos(midAngle) * (radius * 0.7);
+        const labelY = centerY + Math.sin(midAngle) * (radius * 0.7);
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px "Noto Sans SC"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round(value / total * 100) + '%', labelX, labelY);
+        
+        startAngle += sliceAngle;
+      });
+      
+      // 图例
+      data.labels.forEach((label, index) => {
+        const x = 20 + index * 100;
+        const y = canvas.height - 30;
+        
+        ctx.fillStyle = colors[index];
+        ctx.fillRect(x, y, 16, 16);
+        
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '12px "Noto Sans SC"';
+        ctx.textAlign = 'left';
+        ctx.fillText(label, x + 24, y + 13);
+      });
+    }
+    
+    // 初始化图表
+    drawBarChart();
+    drawPieChart();
+    
+    // ===========================================
+    // 幻灯片控制器
+    // ===========================================
+    class SlidePresentation {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.currentIndex = 0;
+        this.init();
+      }
+      
+      init() {
+        this.createNavDots();
+        this.setupIntersectionObserver();
+        this.setupKeyboard();
+        this.setupWheel();
+        this.updateProgress();
+      }
+      
+      createNavDots() {
+        const nav = document.querySelector('.nav-dots');
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('div');
+          dot.className = 'nav-dot' + (index === 0 ? ' active' : '');
+          dot.addEventListener('click', () => this.goToSlide(index));
+          nav.appendChild(dot);
+        });
+      }
+      
+      setupIntersectionObserver() {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                this.currentIndex = Array.from(this.slides).indexOf(entry.target);
+                this.updateNavDots();
+                this.updateProgress();
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+        
+        this.slides.forEach(slide => observer.observe(slide));
+      }
+      
+      setupKeyboard() {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            this.nextSlide();
+          } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            this.prevSlide();
+          }
+        });
+      }
+      
+      setupWheel() {
+        let throttle = false;
+        document.addEventListener('wheel', (e) => {
+          if (throttle) return;
+          throttle = true;
+          setTimeout(() => throttle = false, 1000);
+          
+          if (e.deltaY > 0) {
+            this.nextSlide();
+          } else {
+            this.prevSlide();
+          }
+        });
+      }
+      
+      goToSlide(index) {
+        this.slides[index].scrollIntoView({ behavior: 'smooth' });
+      }
+      
+      nextSlide() {
+        if (this.currentIndex < this.slides.length - 1) {
+          this.goToSlide(this.currentIndex + 1);
+        }
+      }
+      
+      prevSlide() {
+        if (this.currentIndex > 0) {
+          this.goToSlide(this.currentIndex - 1);
+        }
+      }
+      
+      updateNavDots() {
+        document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === this.currentIndex);
+        });
+      }
+      
+      updateProgress() {
+        const progress = ((this.currentIndex + 1) / this.slides.length) * 100;
+        document.querySelector('.progress-fill').style.width = progress + '%';
+      }
+    }
+    
+    // 初始化
+    new SlidePresentation();
+  </script>
+</body>
+</html>
