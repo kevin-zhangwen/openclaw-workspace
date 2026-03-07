@@ -1,0 +1,28 @@
+# 微信小程序
+node_modules/
+*.log
+
+# 开发工具
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# 敏感配置（不要提交）
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secret.json
+config.secret.js
+
+# 云函数依赖（上传时会自动安装）
+cloud/*/node_modules/
