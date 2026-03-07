@@ -225,3 +225,62 @@
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.1); }
 }
+
+/* 徽章解锁动画 */
+.badge-unlock {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.badge-unlock.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.badge-unlock-content {
+  text-align: center;
+  animation: zoomIn 0.5s ease-out;
+}
+
+.badge-unlock-icon {
+  font-size: 150rpx;
+  animation: rotate 1s ease-in-out;
+}
+
+.badge-unlock-title {
+  font-size: 48rpx;
+  color: #FFD700;
+  font-weight: bold;
+  margin-top: 30rpx;
+  text-shadow: 0 0 20rpx rgba(255, 215, 0, 0.5);
+}
+
+.badge-unlock-text {
+  font-size: 32rpx;
+  color: #fff;
+  margin-top: 16rpx;
+  opacity: 0.9;
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(-180deg) scale(0); }
+  100% { transform: rotate(0deg) scale(1); }
+}

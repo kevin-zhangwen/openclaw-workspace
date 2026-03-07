@@ -60,4 +60,13 @@
       <view class="celebration-text {{celebrationType === 'warning' ? 'bad-color' : 'good-color'}}">{{celebrationText}}</view>
     </view>
   </view>
+
+  <!-- 徽章解锁动画 -->
+  <view class="badge-unlock {{showBadgeUnlock ? 'show' : ''}}" wx:if="{{showBadgeUnlock}}">
+    <view class="badge-unlock-content">
+      <view class="badge-unlock-icon">{{badgeUnlockData.icon}}</view>
+      <view class="badge-unlock-title">🏆 成就解锁!</view>
+      <view class="badge-unlock-text">{{badgeUnlockData.name}}</view>
+    </view>
+  </view>
 </view>
