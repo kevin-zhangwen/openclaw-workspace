@@ -20,6 +20,11 @@ Page({
     badgeUnlockData: {
       icon: '',
       name: ''
+    },
+    weeklyStats: {
+      totalCheckIns: 0,
+      perfectDays: 0,
+      weekLabel: ''
     }
   },
 
@@ -33,6 +38,8 @@ Page({
     if (this.data.points >= 500) {
       this.checkPointsBadge(this.data.points)
     }
+    // 加载周统计
+    this.loadWeeklyStats()
   },
 
   // 加载用户数据
@@ -436,5 +443,55 @@ Page({
         }
       }
     })
+  },
+
+  // 加载周统计
+  loadWeeklyStats: function () {
+    const db = wx.cloud.database()
+    const openid = app.globalData.openid
+    
+    // 计算本周的起始和结束日期
+    const now = new Date()
+    const dayOfWeek = now.getDay() // 0 是周日
+    const startOfWeek = new Date(now)
+    startOfWeek.setDate(now.getDate() - dayOfWeek)
+    startOfWeek.setHours(0, 0, 0, 0)
+    
+    // 查询本周的任务完成记录
+    db.collection('tasks').where({
+      createdBy: openid,
+      lastCompletedAt: db.command.gte(startOfWeek)
+    }).get().then(res => {
+      const tasks = res.data
+      const totalCheckIns = tasks.filter(t => t.completedToday || t.lastCompletedAt).length
+      
+      // 计算完美天数（需要查询历史记录，这里简化处理）
+      // 实际项目中应该在 users 集合中记录每日完成情况
+      const perfectDays = Math.floor(totalCheckIns / (this.data.todayTotal || 1))
+      
+      // 生成本周标签
+      const weekLabel = `第${this.getWeekNumber(now)}周`
+      
+      this.setData({
+        'weeklyStats.totalCheckIns': totalCheckIns,
+        'weeklyStats.perfectDays': perfectDays,
+        'weeklyStats.weekLabel': weekLabel
+      })
+    }).catch(err => {
+      console.error('加载周统计失败:', err)
+    })
+  },
+
+  // 计算是一年中的第几周
+  getWeekNumber: function (date) {
+    const target = new Date(date.valueOf())
+    const dayNr = (date.getDay() + 6) % 7
+    target.setDate(target.getDate() - dayNr + 3)
+    const firstThursday = target.valueOf()
+    target.setMonth(0, 1)
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7)
+    }
+    return 1 + Math.ceil((firstThursday - target) / 604800000)
   }
 })

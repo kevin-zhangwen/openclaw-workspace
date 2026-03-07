@@ -19,6 +19,28 @@
     <view class="complete-text">太棒了！今天的所有任务都完成啦！</view>
   </view>
 
+  <!-- 周统计卡片 -->
+  <view class="weekly-stats card">
+    <view class="stats-header">
+      <view class="stats-title">📊 本周统计</view>
+      <view class="stats-week">{{weeklyStats.weekLabel}}</view>
+    </view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <view class="stat-value">{{weeklyStats.totalCheckIns}}</view>
+        <view class="stat-label">打卡次数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{weeklyStats.perfectDays}}</view>
+        <view class="stat-label">完美天数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">🔥 {{continuousDays}}</view>
+        <view class="stat-label">连续天数</view>
+      </view>
+    </view>
+  </view>
+
   <!-- 任务列表 -->
   <view class="task-section">
     <view class="section-title">📋 今日任务</view>
