@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>龙虾养殖技术详解 - 科技经典融合版</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 科技风配色 */
+      --tech-primary: #00f0ff;
+      --tech-secondary: #7000ff;
+      --tech-accent: #ff006e;
+      --tech-bg: #0a0e27;
+      --tech-bg-light: #1a1f3a;
+      --tech-text: #e0e6ff;
+      
+      /* 经典风配色 */
+      --classic-gold: #c9a961;
+      --classic-navy: #1b2631;
+      --classic-cream: #f5f0e6;
+      --classic-burgundy: #800020;
+      
+      --font-tech: 'Orbitron', sans-serif;
+      --font-classic: 'Noto Sans SC', 'Source Han Sans CN', serif;
+      
+      --slide-padding: clamp(1rem, 4vw, 4rem);
+      --title-size: clamp(1.5rem, 5vw, 4rem);
+      --body-size: clamp(0.875rem, 1.5vw, 1.125rem);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+      font-family: var(--font-classic);
+      background: var(--tech-bg);
+      color: var(--tech-text);
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    /* 背景动画 */
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow {
+      position: fixed;
+      top: -50%;
+      right: -30%;
+      width: 80%;
+      height: 200%;
+      background: radial-gradient(ellipse, rgba(112, 0, 255, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    .slide {
+      width: 100vw;
+      min-height: 100vh;
+      height: 100dvh;
+      padding: var(--slide-padding);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--tech-primary), var(--tech-secondary), var(--tech-accent));
+    }
+
+    .slide-number {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      font-family: var(--font-tech);
+      font-size: 14px;
+      color: var(--tech-primary);
+      opacity: 0.8;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-family: var(--font-tech);
+      font-size: var(--title-size);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--tech-primary) 0%, var(--tech-secondary) 50%, var(--tech-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-family: var(--font-tech);
+      font-size: calc(var(--title-size) * 0.7);
+      font-weight: 700;
+      color: var(--tech-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 3px;
+    }
+
+    h3 {
+      font-family: var(--font-classic);
+      font-size: calc(var(--title-size) * 0.5);
+      font-weight: 700;
+      color: var(--classic-gold);
+      margin-bottom: 0.75rem;
+      border-left: 3px solid var(--classic-gold);
+      padding-left: 0.75rem;
+    }
+
+    p, li {
+      font-size: var(--body-size);
+      line-height: 1.8;
+      color: var(--tech-text);
+      margin-bottom: 0.75rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding-left: 2em;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--tech-primary);
+      font-weight: bold;
+    }
+
+    .highlight {
+      background: linear-gradient(120deg, rgba(0, 240, 255, 0.2) 0%, rgba(112, 0, 255, 0.15) 100%);
+      padding: 0.2em 0.5em;
+      border-radius: 4px;
+      font-weight: 600;
+      color: var(--tech-primary);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(10, 14, 39, 0.95) 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 240, 255, 0.1);
+      margin: 1rem 0;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--tech-primary), var(--tech-secondary));
+    }
+
+    .card.classic {
+      border: 2px solid var(--classic-gold);
+      background: linear-gradient(135deg, var(--classic-navy) 0%, #2a3540 100%);
+    }
+
+    .card.classic::before {
+      background: linear-gradient(180deg, var(--classic-gold), var(--classic-burgundy));
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .card-grid .card {
+      margin: 0;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card-grid .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 50px rgba(0, 240, 255, 0.2);
+    }
+
+    .diagram {
+      background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(10, 14, 39, 0.95) 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 10px 40px rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(112, 0, 255, 0.3);
+    }
+
+    .diagram-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .diagram-item {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(112, 0, 255, 0.1) 100%);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 150px;
+      border: 2px solid var(--tech-primary);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+      transition: all 0.3s;
+    }
+
+    .diagram-item:hover {
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+      transform: scale(1.05);
+    }
+
+    .diagram-item .icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 10px var(--tech-primary));
+    }
+
+    .diagram-arrow {
+      font-size: 2rem;
+      color: var(--tech-accent);
+      animation: arrowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.5; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(5px); }
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(10, 14, 39, 0.95) 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .data-table th {
+      background: linear-gradient(135deg, var(--tech-primary), var(--tech-secondary));
+      color: var(--tech-bg);
+      padding: 1rem;
+      text-align: left;
+      font-family: var(--font-tech);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover {
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--tech-primary) 0%, var(--tech-secondary) 50%, var(--tech-accent) 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.5rem;
+      width: 16px;
+      height: 16px;
+      background: var(--tech-primary);
+      border-radius: 50%;
+      border: 3px solid var(--tech-bg);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.8); }
+      50% { box-shadow: 0 0 30px rgba(0, 240, 255, 1); }
+    }
+
+    .timeline-item strong {
+      color: var(--tech-primary);
+      font-size: 1.1em;
+      font-family: var(--font-tech);
+      letter-spacing: 1px;
+    }
+
+    .nav-dots {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+    }
+
+    .nav-dots button {
+      display: block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--tech-primary);
+      background: transparent;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .nav-dots button.active {
+      background: var(--tech-primary);
+      box-shadow: 0 0 15px var(--tech-primary);
+    }
+
+    .export-pdf {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--tech-primary), var(--tech-secondary));
+      color: var(--tech-bg);
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 1000;
+      font-family: var(--font-tech);
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .export-pdf:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(0, 240, 255, 0.6);
+    }
+
+    .keyboard-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      font-size: 12px;
+      color: var(--tech-text);
+      opacity: 0.6;
+      z-index: 1000;
+      font-family: var(--font-tech);
+    }
+
+    /* 封面页特殊样式 */
+    .slide.cover {
+      text-align: center;
+      background: radial-gradient(ellipse at center, var(--tech-bg-light) 0%, var(--tech-bg) 100%);
+    }
+
+    .slide.cover::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--classic-gold), var(--tech-primary), var(--classic-gold), transparent);
+    }
+
+    .slide.cover h1 {
+      font-size: calc(var(--title-size) * 1.3);
+      text-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
+    }
+
+    .slide.cover .subtitle {
+      font-size: calc(var(--body-size) * 1.3);
+      color: var(--classic-gold);
+      margin-top: 1rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+    }
+
+    .slide.cover .emoji {
+      font-size: 6rem;
+      display: block;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px var(--tech-primary));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .warning-box {
+      background: linear-gradient(135deg, rgba(255, 165, 0, 0.15) 0%, rgba(255, 69, 0, 0.1) 100%);
+      border-left: 4px solid var(--tech-accent);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border: 1px solid rgba(255, 0, 110, 0.3);
+    }
+
+    .warning-box strong {
+      color: var(--tech-accent);
+      font-family: var(--font-tech);
+    }
+
+    .success-box {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.15) 0%, rgba(0, 200, 100, 0.1) 100%);
+      border-left: 4px solid var(--tech-primary);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .success-box strong {
+      color: var(--tech-primary);
+      font-family: var(--font-tech);
+    }
+
+    .tech-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(112, 0, 255, 0.2));
+      border: 1px solid var(--tech-primary);
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-family: var(--font-tech);
+      color: var(--tech-primary);
+      margin: 0.25rem;
+    }
+
+    .classic-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--classic-gold), transparent);
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .classic-divider::before {
+      content: '◆';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--classic-gold);
+      background: var(--tech-bg);
+      padding: 0 1rem;
+    }
+
+    @media print {
+      .nav-dots, .export-pdf, .keyboard-hint, .bg-grid, .bg-glow {
+        display: none !important;
+      }
+      
+      .slide {
+        height: 100vh;
+        page-break-after: always;
+        break-after: page;
+      }
+      
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: white !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- Slide 1: 封面 -->
+  <div class="slide cover">
+    <span class="emoji">🦞</span>
+    <h1>龙虾养殖技术详解</h1>
+    <p class="subtitle">INSTALLATION · PRINCIPLE · BEST PRACTICES</p>
+    <div style="margin-top: 2rem;">
+      <span class="tech-badge">池塘建设</span>
+      <span class="tech-badge">生态原理</span>
+      <span class="tech-badge">智能管理</span>
+    </div>
+    <div class="classic-divider" style="margin-top: 3rem;"></div>
+    <p style="color: var(--classic-gold); font-size: 1.1rem; letter-spacing: 3px;">科技赋能 · 经典传承</p>
+    <div class="slide-number">01 / 16</div>
+  </div>
+
+  <!-- Slide 2: 目录 -->
+  <div class="slide">
+    <h2>📊 CONTENTS</h2>
+    <h1 style="font-size: calc(var(--title-size) * 0.9);">目录概览</h1>
+    <div class="card-grid">
+      <div class="card classic">
+        <h3>PART 01</h3>
+        <h1 style="font-size: 1.8rem; color: var(--tech-primary);">龙虾的"安装"</h1>
+        <p style="color: var(--classic-gold);">养殖设施搭建与准备</p>
+        <ul style="margin-top: 1rem; font-size: 0.9rem;">
+          <li>池塘选址标准</li>
+          <li>设施建设要点</li>
+          <li>水质处理流程</li>
+          <li>虾苗投放规格</li>
+        </ul>
+      </div>
+      <div class="card classic">
+        <h3>PART 02</h3>
+        <h1 style="font-size: 1.8rem; color: var(--tech-secondary);">实现原理</h1>
+        <p style="color: var(--classic-gold);">生态养殖核心原理</p>
+        <ul style="margin-top: 1rem; font-size: 0.9rem;">
+          <li>生态循环系统</li>
+          <li>蜕壳生长机制</li>
+          <li>温度影响模型</li>
+          <li>营养需求分析</li>
+        </ul>
+      </div>
+      <div class="card classic">
+        <h3>PART 03</h3>
+        <h1 style="font-size: 1.8rem; color: var(--tech-accent);">最佳使用</h1>
+        <p style="color: var(--classic-gold);">养殖管理技术要点</p>
+        <ul style="margin-top: 1rem; font-size: 0.9rem;">
+          <li>日常管理系统</li>
+          <li>病害防控方案</li>
+          <li>捕捞优化策略</li>
+          <li>效益分析模型</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">02 / 16</div>
+  </div>
+
+  <!-- Slide 3: 第一部分封面 -->
+  <div class="slide">
+    <h2>PART 01</h2>
+    <h1>龙虾的"安装"</h1>
+    <p style="font-size: 1.2rem; margin-top: 1rem; color: var(--classic-gold);">INSTALLATION & INFRASTRUCTURE</p>
+    <div class="diagram">
+      <div class="diagram-box">
+        <div class="diagram-item">
+          <span class="icon">🏞️</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">池塘选择</strong>
+          <p style="font-size: 0.8em; margin-top: 0.5rem;">Site Selection</p>
+        </div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-item">
+          <span class="icon">🚧</span>
+          <strong style="color: var(--tech-secondary); font-family: var(--font-tech);">设施建设</strong>
+          <p style="font-size: 0.8em; margin-top: 0.5rem;">Infrastructure</p>
+        </div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-item">
+          <span class="icon">💧</span>
+          <strong style="color: var(--tech-accent); font-family: var(--font-tech);">水质处理</strong>
+          <p style="font-size: 0.8em; margin-top: 0.5rem;">Water Treatment</p>
+        </div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-item">
+          <span class="icon">🦞</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">投放虾苗</strong>
+          <p style="font-size: 0.8em; margin-top: 0.5rem;">Stocking</p>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider"></div>
+    <p style="text-align: center; color: var(--classic-gold);">"工欲善其事，必先利其器"</p>
+    <div class="slide-number">03 / 16</div>
+  </div>
+
+  <!-- Slide 4: 池塘选择标准 -->
+  <div class="slide">
+    <h2>🏞️ 池塘选择标准</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">SITE SELECTION CRITERIA</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>面积规格</h3>
+        <table class="data-table" style="margin: 0; font-size: 0.9rem;">
+          <tr><td>单塘面积</td><td><span class="highlight">3-10 亩</span></td></tr>
+          <tr><td>水深要求</td><td><span class="highlight">1.2-1.5 米</span></td></tr>
+          <tr><td>池塘形状</td><td>长方形，东西走向</td></tr>
+          <tr><td>长宽比</td><td>2:1 或 3:1</td></tr>
+          <tr><td>池埂面宽</td><td>2-2.5 米</td></tr>
+          <tr><td>坡度比</td><td>1:2.5-1:3.5</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>水源条件</h3>
+        <ul>
+          <li>水源充足，<span class="highlight">无污染</span></li>
+          <li>pH 值：<span class="highlight">7.0-8.5</span>（弱碱性）</li>
+          <li>溶氧量：≥<span class="highlight">5mg/L</span></li>
+          <li>透明度：<span class="highlight">10-20cm</span></li>
+          <li>进排水系统独立</li>
+          <li>进水口设 40 目和 60 目双层筛绢网</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>土质要求</h3>
+        <ul>
+          <li><span class="highlight">黏土或黏壤土</span>最佳</li>
+          <li>保水性能好，渗透率低</li>
+          <li>淤泥厚度：<span class="highlight">15-20cm</span></li>
+          <li>底部平坦，便于捕捞</li>
+          <li>交通方便，阳光充足</li>
+          <li>电力供应稳定</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">04 / 16</div>
+  </div>
+
+  <!-- Slide 5: 设施建设要点 -->
+  <div class="slide">
+    <h2>🚧 设施建设要点</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">INFRASTRUCTURE CONSTRUCTION</p>
+    <div class="card">
+      <h3>🔒 防逃设施（关键！）</h3>
+      <div class="card-grid" style="margin-top: 1rem;">
+        <div>
+          <ul>
+            <li>池塘四周设置防逃网，高度<span class="highlight">≥50cm</span></li>
+            <li>材质：聚乙烯网片附膜或防逃塑料膜</li>
+            <li>底部埋入土中<span class="highlight">20cm</span>，防止龙虾打洞</li>
+            <li>四角做成<span class="highlight">圆弧形</span>，避免龙虾攀爬</li>
+            <li>定期检查维护，防止破损</li>
+          </ul>
+        </div>
+        <div>
+          <div style="background: rgba(0, 240, 255, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid var(--tech-primary);">
+            <p style="font-family: var(--font-tech); color: var(--tech-primary); font-size: 0.9rem;">标准配置</p>
+            <p style="margin-top: 0.5rem;">聚乙烯网片 +20cm 塑料薄膜<br/>埋深 20cm + 露出 40cm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>💨 增氧系统</h3>
+        <ul>
+          <li>每亩配置<span class="highlight">0.3-0.5kW</span>增氧机</li>
+          <li>类型：微孔增氧或水车式增氧机</li>
+          <li>高温季节和夜间必须开启</li>
+          <li>备用发电机，防止停电缺氧</li>
+          <li>溶氧低于 3mg/L 时紧急增氧</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🌿 隐蔽物设置</h3>
+        <ul>
+          <li>投放水草：伊乐藻、轮叶黑藻、苦草</li>
+          <li>覆盖面积：占水面<span class="highlight">40-60%</span></li>
+          <li>设置人工虾巢（PVC 管、瓦片等）</li>
+          <li>为龙虾提供蜕壳和躲避场所</li>
+          <li>水草分区域种植，留出投喂区</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">05 / 16</div>
+  </div>
+
+  <!-- Slide 6: 水质处理流程 -->
+  <div class="slide">
+    <h2>💧 水质处理流程</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">WATER TREATMENT PROCESS</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <strong>STEP 01 - 清塘消毒（投放前 15 天）</strong>
+        <p>排干池水，清除淤泥，每亩用<span class="highlight">生石灰 75-100kg</span>全池泼洒，暴晒 7-10 天。使用 10% 苯扎溴铵全池泼洒，用量 50g/667㎡，诱捕野杂龙虾。</p>
+      </div>
+      <div class="timeline-item">
+        <strong>STEP 02 - 注水施肥（投放前 7 天）</strong>
+        <p>注入新水 80-100cm，施发酵有机肥<span class="highlight">200-300kg/亩</span>，培育天然饵料。进水口设双层筛绢网过滤。</p>
+      </div>
+      <div class="timeline-item">
+        <strong>STEP 03 - 调水改底（投放前 3 天）</strong>
+        <p>使用 EM 菌、光合细菌等微生物制剂，调节水质，建立有益菌群。黑粉或粉剂活菌旺分解有机废物。</p>
+      </div>
+      <div class="timeline-item">
+        <strong>STEP 04 - 试水放苗（投放当天）</strong>
+        <p>取池水试养龙虾 24 小时，确认安全后投放虾苗。选择晴天早晨或傍晚投放，沿池边浅水区多点投放。</p>
+      </div>
+    </div>
+    <div class="warning-box">
+      <strong>⚠️ CRITICAL:</strong> 水源必须经过沉淀过滤，避免农药残留和重金属污染！养殖尾水净化区面积占池塘面积的 6% 以上。
+    </div>
+    <div class="slide-number">06 / 16</div>
+  </div>
+
+  <!-- Slide 7: 虾苗投放规格 -->
+  <div class="slide">
+    <h2>🦞 虾苗投放规格</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">STOCKING SPECIFICATIONS</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>规格要求</th>
+          <th>技术参数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>虾苗规格</strong></td>
+          <td>3-5cm，体质健壮</td>
+          <td>密度：6000-8000 尾/亩</td>
+        </tr>
+        <tr>
+          <td><strong>投放时间</strong></td>
+          <td>3-5 月或 9-10 月</td>
+          <td>水温：15-25℃</td>
+        </tr>
+        <tr>
+          <td><strong>运输方式</strong></td>
+          <td>带水充氧运输</td>
+          <td>时间≤4 小时，密度≤5kg/袋</td>
+        </tr>
+        <tr>
+          <td><strong>投放方法</strong></td>
+          <td>沿池边浅水区多点投放</td>
+          <td>避免集中一处，减少应激</td>
+        </tr>
+        <tr>
+          <td><strong>优质虾苗特征</strong></td>
+          <td colspan="2">体色鲜亮、活动力强、附肢齐全、无病害、规格整齐</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="success-box">
+      <strong>✅ TIP:</strong> 投放前用 3-5% 食盐水浸洗虾苗 3-5 分钟，消毒杀菌，提高成活率！
+    </div>
+    <div class="slide-number">07 / 16</div>
+  </div>
+
+  <!-- Slide 8: 第二部分封面 -->
+  <div class="slide">
+    <h2>PART 02</h2>
+    <h1>实现原理</h1>
+    <p style="font-size: 1.2rem; margin-top: 1rem; color: var(--classic-gold);">WORKING PRINCIPLES</p>
+    <div class="diagram">
+      <div class="diagram-box">
+        <div class="diagram-item">
+          <span class="icon">🌿</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">水草系统</strong>
+          <p style="font-size: 0.8em;">产氧 + 隐蔽 + 饵料</p>
+        </div>
+        <div class="diagram-item">
+          <span class="icon">🦠</span>
+          <strong style="color: var(--tech-secondary); font-family: var(--font-tech);">微生物</strong>
+          <p style="font-size: 0.8em;">分解有机物</p>
+        </div>
+        <div class="diagram-item">
+          <span class="icon">🦞</span>
+          <strong style="color: var(--tech-accent); font-family: var(--font-tech);">龙虾</strong>
+          <p style="font-size: 0.8em;">主养品种</p>
+        </div>
+        <div class="diagram-item">
+          <span class="icon">💨</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">增氧</strong>
+          <p style="font-size: 0.8em;">保证溶氧</p>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider"></div>
+    <p style="text-align: center; color: var(--tech-primary); font-family: var(--font-tech); letter-spacing: 2px;">
+      ECOLOGICAL BALANCE = WATER QUALITY + FOOD + ENVIRONMENT
+    </p>
+    <div class="slide-number">08 / 16</div>
+  </div>
+
+  <!-- Slide 9: 生态循环原理 -->
+  <div class="slide">
+    <h2>🔄 生态循环原理</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">ECOLOGICAL CIRCULATION SYSTEM</p>
+    <div class="diagram">
+      <div style="text-align: center; margin: 2rem 0;">
+        <div style="display: inline-block; text-align: left; background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(10, 14, 39, 0.98)); padding: 2rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15); border: 1px solid rgba(0, 240, 255, 0.2);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="text-align: center;">
+              <span style="font-size: 3rem;">☀️</span>
+              <p style="font-family: var(--font-tech); color: var(--tech-primary);">阳光</p>
+            </div>
+            <div style="font-size: 2rem; color: var(--tech-accent);">→</div>
+            <div style="text-align: center;">
+              <span style="font-size: 3rem;">🌿</span>
+              <p style="font-family: var(--font-tech); color: var(--tech-primary);">水草/藻类</p>
+              <p style="font-size: 0.8em; color: var(--success);">光合作用产氧</p>
+            </div>
+            <div style="font-size: 2rem; color: var(--tech-accent);">→</div>
+            <div style="text-align: center;">
+              <span style="font-size: 3rem;">🦞</span>
+              <p style="font-family: var(--font-tech); color: var(--tech-primary);">龙虾</p>
+              <p style="font-size: 0.8em;">摄食生长</p>
+            </div>
+          </div>
+          <div style="border-top: 2px dashed var(--tech-primary); margin: 1rem 0; padding-top: 1rem;">
+            <div style="display: flex; align-items: center; justify-content: space-around;">
+              <div style="text-align: center;">
+                <span style="font-size: 2rem;">💩</span>
+                <p style="font-size: 0.9em; font-family: var(--font-tech);">龙虾排泄物</p>
+              </div>
+              <div style="font-size: 2rem; color: var(--tech-accent);">→</div>
+              <div style="text-align: center;">
+                <span style="font-size: 2rem;">🦠</span>
+                <p style="font-size: 0.9em; font-family: var(--font-tech);">微生物分解</p>
+              </div>
+              <div style="font-size: 2rem; color: var(--tech-accent);">→</div>
+              <div style="text-align: center;">
+                <span style="font-size: 2rem;">🌱</span>
+                <p style="font-size: 0.9em; font-family: var(--font-tech);">营养盐</p>
+                <p style="font-size: 0.8em; color: var(--tech-primary);">滋养水草</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-grid" style="margin-top: 1.5rem;">
+      <div class="card">
+        <h3>能量流动</h3>
+        <p>太阳能 → 水草（生产者）→ 龙虾（消费者）→ 微生物（分解者）</p>
+      </div>
+      <div class="card">
+        <h3>物质循环</h3>
+        <p>排泄物 → 营养盐 → 水草吸收 → 龙虾饵料 → 排泄物（闭环）</p>
+      </div>
+    </div>
+    <div class="slide-number">09 / 16</div>
+  </div>
+
+  <!-- Slide 10: 关键生长原理 -->
+  <div class="slide">
+    <h2>📈 龙虾生长关键原理</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">GROWTH MECHANISMS</p>
+    <div class="card-grid">
+      <div class="card classic">
+        <h3>蜕壳生长机制</h3>
+        <ul>
+          <li>龙虾通过<span class="highlight">蜕壳</span>实现生长</li>
+          <li>一生蜕壳<span class="highlight">11-12 次</span></li>
+          <li>蜕壳期需要充足钙质和隐蔽场所</li>
+          <li>蜕壳后 2-3 小时新壳硬化</li>
+          <li>此期间最脆弱，易受攻击</li>
+          <li>定期补充钙质（生石灰 15kg/亩）</li>
+        </ul>
+      </div>
+      <div class="card classic">
+        <h3>温度影响模型</h3>
+        <ul>
+          <li>适宜温度：<span class="highlight">20-30℃</span></li>
+          <li>最适生长：<span class="highlight">24-28℃</span></li>
+          <li>＜10℃：进入洞穴越冬</li>
+          <li>＞35℃：摄食减少，生长缓慢</li>
+          <li>夏季需加深水位、增加遮蔽</li>
+          <li>冬季保持水深 1.5 米以上</li>
+        </ul>
+      </div>
+      <div class="card classic">
+        <h3>食性特点</h3>
+        <ul>
+          <li>杂食性，偏<span class="highlight">动物性饵料</span></li>
+          <li>天然饵料：水草、藻类、浮游生物</li>
+          <li>人工饲料：蛋白质含量≥<span class="highlight">32%</span></li>
+          <li>傍晚和夜间摄食活跃</li>
+          <li>有<span class="highlight">残食同类</span>习性</li>
+          <li>日投喂量：体重的 3-5%</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">10 / 16</div>
+  </div>
+
+  <!-- Slide 11: 营养需求分析 -->
+  <div class="slide">
+    <h2>🍽️ 营养需求分析</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">NUTRITIONAL REQUIREMENTS</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>蛋白质需求</h3>
+        <table class="data-table" style="margin: 0;">
+          <tr><td>幼虾阶段</td><td><span class="highlight">35-40%</span></td></tr>
+          <tr><td>成虾阶段</td><td><span class="highlight">30-35%</span></td></tr>
+          <tr><td>亲虾阶段</td><td><span class="highlight">35-38%</span></td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>关键营养素</h3>
+        <ul>
+          <li>脂肪：<span class="highlight">6-8%</span>（能量来源）</li>
+          <li>碳水化合物：<span class="highlight">20-25%</span></li>
+          <li>钙磷比：<span class="highlight">1.5:1</span></li>
+          <li>维生素：VC、VE 关键</li>
+          <li>矿物质：钙、磷、镁必需</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>投喂策略</h3>
+        <ul>
+          <li>定时：傍晚投喂为主</li>
+          <li>定点：沿池边多点投喂</li>
+          <li>定量：日投喂量 3-5%</li>
+          <li>定质：新鲜不变质</li>
+          <li>根据水温、水质调整</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">11 / 16</div>
+  </div>
+
+  <!-- Slide 12: 第三部分封面 -->
+  <div class="slide">
+    <h2>PART 03</h2>
+    <h1>最佳使用方法</h1>
+    <p style="font-size: 1.2rem; margin-top: 1rem; color: var(--classic-gold);">BEST PRACTICES & MANAGEMENT</p>
+    <div class="card" style="margin-top: 2rem;">
+      <h3>管理核心</h3>
+      <div style="display: flex; justify-content: space-around; text-align: center; margin-top: 1rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span style="font-size: 2rem;">💧</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-primary);">水质管理</strong></p>
+          <p style="font-size: 0.8em;">Water Quality</p>
+        </div>
+        <div>
+          <span style="font-size: 2rem;">🍽️</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-secondary);">科学投喂</strong></p>
+          <p style="font-size: 0.8em;">Feeding</p>
+        </div>
+        <div>
+          <span style="font-size: 2rem;">🦠</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-accent);">病害防控</strong></p>
+          <p style="font-size: 0.8em;">Disease Control</p>
+        </div>
+        <div>
+          <span style="font-size: 2rem;">🎣</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-primary);">适时捕捞</strong></p>
+          <p style="font-size: 0.8em;">Harvesting</p>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider"></div>
+    <p style="text-align: center; color: var(--classic-gold); font-style: italic;">"三分养，七分管"</p>
+    <div class="slide-number">12 / 16</div>
+  </div>
+
+  <!-- Slide 13: 日常管理要点 -->
+  <div class="slide">
+    <h2>📋 日常管理要点</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">DAILY MANAGEMENT PROTOCOL</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>管理项目</th>
+          <th>操作要点</th>
+          <th>频率</th>
+          <th>标准值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>水质监测</strong></td>
+          <td>pH、溶氧、氨氮、亚硝酸盐</td>
+          <td>每天 1 次</td>
+          <td>pH 7.0-8.5, DO≥5mg/L</td>
+        </tr>
+        <tr>
+          <td><strong>投喂管理</strong></td>
+          <td>傍晚投喂，日投喂量 3-5%</td>
+          <td>每天 1 次</td>
+          <td>2 小时吃完为宜</td>
+        </tr>
+        <tr>
+          <td><strong>巡塘检查</strong></td>
+          <td>防逃设施、龙虾活动、水质变化</td>
+          <td>早晚各 1 次</td>
+          <td>记录异常情况</td>
+        </tr>
+        <tr>
+          <td><strong>增氧开机</strong></td>
+          <td>晴天中午、阴天清晨、闷热半夜</td>
+          <td>按需开启</td>
+          <td>DO＜3mg/L 必开</td>
+        </tr>
+        <tr>
+          <td><strong>换水调水</strong></td>
+          <td>每次换水 20-30%，定期用微生物</td>
+          <td>7-10 天 1 次</td>
+          <td>透明度 10-20cm</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warning-box">
+      <strong>⚠️ KEY PERIOD:</strong> 5-6 月和 9-10 月是龙虾生长高峰期，需加强投喂和水质管理！水温 24-28℃时生长最快。
+    </div>
+    <div class="slide-number">13 / 16</div>
+  </div>
+
+  <!-- Slide 14: 常见病害防治 -->
+  <div class="slide">
+    <h2>🏥 常见病害防治</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">DISEASE PREVENTION & TREATMENT</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>黑鳃病</h3>
+        <p><strong style="color: var(--tech-accent);">症状：</strong>鳃部变黑，呼吸困难</p>
+        <p><strong style="color: var(--tech-primary);">防治：</strong>定期换水，用二氧化氯消毒，投喂维生素 C</p>
+      </div>
+      <div class="card">
+        <h3>烂尾病</h3>
+        <p><strong style="color: var(--tech-accent);">症状：</strong>尾部溃烂，附肢脱落</p>
+        <p><strong style="color: var(--tech-primary);">防治：</strong>改善水质，避免密度过高，用聚维酮碘泼洒</p>
+      </div>
+      <div class="card">
+        <h3>肠炎病</h3>
+        <p><strong style="color: var(--tech-accent);">症状：</strong>肠道充血，摄食减少</p>
+        <p><strong style="color: var(--tech-primary);">防治：</strong>饲料添加大蒜素、益生菌，不投变质饲料</p>
+      </div>
+      <div class="card">
+        <h3>纤毛虫病</h3>
+        <p><strong style="color: var(--tech-accent);">症状：</strong>体表附着白色絮状物</p>
+        <p><strong style="color: var(--tech-primary);">防治：</strong>硫酸锌或甲醛溶液浸洗，改善水质</p>
+      </div>
+    </div>
+    <div class="success-box">
+      <strong>✅ PREVENTION PRINCIPLE:</strong> 防重于治！保持水质清新、合理密度、营养均衡是防病关键。防治药物选择符合 NY 5071 标准。
+    </div>
+    <div class="slide-number">14 / 16</div>
+  </div>
+
+  <!-- Slide 15: 捕捞与效益 -->
+  <div class="slide">
+    <h2>🎣 捕捞与效益分析</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">HARVESTING & ECONOMIC ANALYSIS</p>
+    <div class="card-grid">
+      <div class="card classic">
+        <h3>捕捞策略</h3>
+        <ul>
+          <li>轮捕轮放，捕大留小</li>
+          <li>地笼捕捞：傍晚放置，清晨收取</li>
+          <li>规格达到 30g 以上即可捕捞</li>
+          <li>避免在蜕壳期大量捕捞</li>
+          <li>高温季节减少捕捞频率</li>
+        </ul>
+      </div>
+      <div class="card classic">
+        <h3>效益分析（亩）</h3>
+        <table class="data-table" style="margin: 0; font-size: 0.9rem;">
+          <tr><td>投入成本</td><td>约 3000-4000 元</td></tr>
+          <tr><td>产量</td><td>150-250kg</td></tr>
+          <tr><td>售价</td><td>40-80 元/kg</td></tr>
+          <tr><td>产值</td><td>6000-20000 元</td></tr>
+          <tr><td><span class="highlight">净利润</span></td><td><span class="highlight">3000-15000 元</span></td></tr>
+        </table>
+      </div>
+      <div class="card classic">
+        <h3>风险控制</h3>
+        <ul>
+          <li>购买养殖保险</li>
+          <li>多元化销售渠道</li>
+          <li>建立品牌，提高附加值</li>
+          <li>关注市场价格波动</li>
+          <li>加入合作社，降低风险</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">15 / 16</div>
+  </div>
+
+  <!-- Slide 16: 结束页 -->
+  <div class="slide cover">
+    <span class="emoji">🦞</span>
+    <h1>THANK YOU</h1>
+    <p class="subtitle">科学养殖 · 高效产出 · 可持续发展</p>
+    <div class="card" style="margin-top: 3rem; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+      <h3>📌 核心要点回顾</h3>
+      <div class="card-grid" style="margin-top: 1rem;">
+        <div>
+          <h4 style="color: var(--tech-primary); font-family: var(--font-tech);">INSTALL 安装</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>选好池塘</li>
+            <li>建好防逃</li>
+            <li>培好水质</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: var(--tech-secondary); font-family: var(--font-tech);">PRINCIPLE 原理</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>生态循环</li>
+            <li>蜕壳生长</li>
+            <li>温度关键</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: var(--tech-accent); font-family: var(--font-tech);">MANAGEMENT 管理</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>水质第一</li>
+            <li>科学投喂</li>
+            <li>预防为主</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider" style="margin-top: 2rem;"></div>
+    <p style="margin-top: 2rem; color: var(--classic-gold); letter-spacing: 2px;">
+      祝养殖顺利 · 丰收满满
+    </p>
+    <div class="slide-number">16 / 16</div>
+  </div>
+
+  <!-- 导航元素 -->
+  <div class="nav-dots" id="navDots"></div>
+  <button class="export-pdf" onclick="window.print()">📄 EXPORT PDF</button>
+  <div class="keyboard-hint">↑↓ PAGE UP/DOWN</div>
+
+  <script>
+    // 导航点生成
+    const slides = document.querySelectorAll('.slide');
+    const navDots = document.getElementById('navDots');
+    
+    slides.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.addEventListener('click', () => {
+        slides[index].scrollIntoView({ behavior: 'smooth' });
+      });
+      navDots.appendChild(dot);
+    });
+
+    // 滚动监听
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = Array.from(slides).indexOf(entry.target);
+          document.querySelectorAll('.nav-dots button').forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    slides.forEach(slide => observer.observe(slide));
+
+    // 键盘导航
+    let currentSlide = 0;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault();
+        if (currentSlide < slides.length - 1) {
+          slides[currentSlide + 1].scrollIntoView({ behavior: 'smooth' });
+          currentSlide++;
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        if (currentSlide > 0) {
+          slides[currentSlide - 1].scrollIntoView({ behavior: 'smooth' });
+          currentSlide--;
+        }
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        slides[0].scrollIntoView({ behavior: 'smooth' });
+        currentSlide = 0;
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        slides[slides.length - 1].scrollIntoView({ behavior: 'smooth' });
+        currentSlide = slides.length - 1;
+      }
+    });
+
+    // 触摸滑动支持
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const diff = touchStartY - touchEndY;
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0 && currentSlide < slides.length - 1) {
+          slides[currentSlide + 1].scrollIntoView({ behavior: 'smooth' });
+          currentSlide++;
+        } else if (diff < 0 && currentSlide > 0) {
+          slides[currentSlide - 1].scrollIntoView({ behavior: 'smooth' });
+          currentSlide--;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
