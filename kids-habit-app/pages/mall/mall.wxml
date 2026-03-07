@@ -1,0 +1,72 @@
+<!--pages/mall/mall.wxml-->
+<view class="container">
+  <!-- 积分展示 -->
+  <view class="header card">
+    <view class="points-display">
+      <view class="points-icon">💰</view>
+      <view class="points-value">{{points}}</view>
+      <view class="points-label">我的积分</view>
+    </view>
+  </view>
+
+  <!-- 奖励列表 -->
+  <view class="rewards-section">
+    <view class="section-title">🎁 可兑换奖励</view>
+    
+    <view class="rewards-grid">
+      <view 
+        class="reward-card card {{points >= item.points ? 'available' : 'unavailable'}}"
+        wx:for="{{rewards}}"
+        wx:key="id"
+        data-index="{{index}}"
+        bindtap="selectReward"
+      >
+        <view class="reward-icon">{{item.icon}}</view>
+        <view class="reward-name">{{item.name}}</view>
+        <view class="reward-points">{{item.points}} 积分</view>
+        <view class="reward-diff" wx:if="{{points < item.points}}">
+          还差{{item.points - points}}分
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 兑换历史 -->
+  <view class="history-section" wx:if="{{exchangeHistory.length > 0}}">
+    <view class="section-title">📜 兑换记录</view>
+    
+    <view class="history-list">
+      <view class="history-item card" wx:for="{{exchangeHistory}}" wx:key="_id">
+        <view class="history-icon">{{item.rewardIcon}}</view>
+        <view class="history-info">
+          <view class="history-name">{{item.rewardName}}</view>
+          <view class="history-points">-{{item.points}} 积分</view>
+        </view>
+        <view class="history-date">{{item.createdAt ? '已兑换' : ''}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 确认兑换弹窗 -->
+  <view class="modal-overlay {{showConfirmDialog ? 'show' : ''}}" wx:if="{{showConfirmDialog}}">
+    <view class="modal-content">
+      <view class="modal-reward-icon">{{selectedReward.icon}}</view>
+      <view class="modal-reward-name">{{selectedReward.name}}</view>
+      <view class="modal-reward-desc">{{selectedReward.description}}</view>
+      <view class="modal-reward-points">需要 {{selectedReward.points}} 积分</view>
+      
+      <view class="modal-buttons">
+        <button class="btn-cancel" bindtap="cancelExchange">再想想</button>
+        <button class="btn-confirm" bindtap="confirmExchange">确定兑换</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 成功动画 -->
+  <view class="success-animation {{showSuccessAnimation ? 'show' : ''}}" wx:if="{{showSuccessAnimation}}">
+    <view class="success-content">
+      <view class="success-icon">🎉</view>
+      <view class="success-text">兑换成功！</view>
+    </view>
+  </view>
+</view>

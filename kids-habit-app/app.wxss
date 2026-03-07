@@ -1,0 +1,88 @@
+/* app.wxss - 全局样式 */
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 32rpx;
+  line-height: 1.5;
+  color: #333333;
+  background-color: #FFF9F0;
+}
+
+/* 暖色调主题色 */
+.primary-color {
+  color: #FF9500;
+}
+
+.secondary-color {
+  color: #FFB347;
+}
+
+.accent-color {
+  color: #FF6B9D;
+}
+
+.good-color {
+  color: #52C41A;
+}
+
+.bad-color {
+  color: #FF4D4F;
+}
+
+/* 通用按钮样式 */
+.btn-primary {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #FFB347, #FFD699);
+  color: #666;
+  border: none;
+  border-radius: 40rpx;
+  padding: 16rpx 32rpx;
+  font-size: 28rpx;
+}
+
+/* 卡片样式 */
+.card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  margin: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 149, 0, 0.15);
+}
+
+/* 大字体适合儿童 */
+.large-text {
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+.medium-text {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+/* 动画类 */
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.bounce {
+  animation: bounce 0.3s ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10rpx); }
+}
+
+.float {
+  animation: float 2s ease-in-out infinite;
+}

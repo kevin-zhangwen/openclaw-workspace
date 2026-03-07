@@ -1,0 +1,63 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部用户信息 -->
+  <view class="header card">
+    <view class="user-info">
+      <view class="avatar">{{childProfile.avatar}}</view>
+      <view class="nickname">{{childProfile.nickname}}</view>
+    </view>
+    <view class="points-info">
+      <view class="points">⭐ {{points}} 积分</view>
+      <view class="progress">{{todayCompleted}}/{{todayTotal}} 今日完成</view>
+    </view>
+    <view class="continuous-days">🔥 已连续 {{continuousDays}} 天</view>
+  </view>
+
+  <!-- 全部完成提示 -->
+  <view class="all-complete card" wx:if="{{showAllComplete}}">
+    <view class="complete-icon">🎉</view>
+    <view class="complete-text">太棒了！今天的所有任务都完成啦！</view>
+  </view>
+
+  <!-- 任务列表 -->
+  <view class="task-section">
+    <view class="section-title">📋 今日任务</view>
+    
+    <view class="task-list">
+      <view 
+        class="task-card card {{task.completedToday ? 'completed' : ''}} {{task.type === 'bad' ? 'bad-task' : 'good-task'}}"
+        wx:for="{{tasks}}"
+        wx:key="_id"
+        data-id="{{item._id}}"
+        data-index="{{index}}"
+        bindtap="checkInTask"
+      >
+        <view class="task-icon">{{task.icon}}</view>
+        <view class="task-info">
+          <view class="task-name">{{task.name}}</view>
+          <view class="task-points {{task.type === 'good' ? 'good-color' : 'bad-color'}}">
+            {{task.type === 'good' ? '+' : '-'}}{{task.points}} 积分
+          </view>
+        </view>
+        <view class="task-status">
+          <view class="check-mark" wx:if="{{item.completedToday}}">✓</view>
+          <view class="check-circle" wx:else></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-tip" wx:if="{{tasks.length === 0}}">
+      <view class="empty-icon">📝</view>
+      <view class="empty-text">还没有任务哦</view>
+      <view class="empty-hint">去设置页添加任务吧~</view>
+    </view>
+  </view>
+
+  <!-- 庆祝动画 -->
+  <view class="celebration {{showCelebration ? 'show' : ''}}" wx:if="{{showCelebration}}">
+    <view class="celebration-content">
+      <view class="celebration-icon">{{celebrationType === 'success' ? '🎉' : celebrationType === 'warning' ? '⭐' : '✨'}}</view>
+      <view class="celebration-text {{celebrationType === 'warning' ? 'bad-color' : 'good-color'}}">{{celebrationText}}</view>
+    </view>
+  </view>
+</view>

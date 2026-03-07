@@ -1,0 +1,349 @@
+/* pages/settings/settings.wxss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+
+/* 家长验证入口 */
+.parent-verify {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx;
+  background: linear-gradient(135deg, #FFB347, #FFD699);
+  text-align: center;
+}
+
+.verify-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.verify-text {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.verify-hint {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 家长管理区域 */
+.parent-section {
+  margin-top: 20rpx;
+}
+
+.section {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 30rpx;
+  padding: 12rpx 24rpx;
+  font-size: 26rpx;
+}
+
+/* 孩子档案编辑器 */
+.profile-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-preview {
+  font-size: 100rpx;
+  margin-bottom: 30rpx;
+}
+
+.avatar-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16rpx;
+  margin-bottom: 30rpx;
+}
+
+.avatar-option {
+  font-size: 48rpx;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  background: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.avatar-option.selected {
+  background: #FFB347;
+  transform: scale(1.1);
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 60rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+/* 列表项 */
+.item-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.item-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 4rpx;
+}
+
+.item-detail {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.item-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.btn-edit {
+  color: #FF9500;
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+}
+
+.btn-delete {
+  color: #FF4D4F;
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 设置项 */
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-label {
+  font-size: 32rpx;
+  color: #333;
+}
+
+.setting-action {
+  font-size: 28rpx;
+  color: #FF9500;
+}
+
+.setting-item.danger .setting-label {
+  color: #FF4D4F;
+}
+
+.setting-action.danger-text {
+  color: #FF4D4F;
+}
+
+/* 密码输入弹窗 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 32rpx;
+  padding: 60rpx 40rpx;
+  width: 600rpx;
+  text-align: center;
+  animation: bounce 0.3s ease-in-out;
+}
+
+.form-modal {
+  width: 700rpx;
+  text-align: left;
+}
+
+.modal-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+
+.modal-desc {
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.password-input {
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 40rpx;
+  text-align: center;
+  letter-spacing: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.password-error {
+  color: #FF4D4F;
+  font-size: 26rpx;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 30rpx;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+/* 表单样式 */
+.form-group {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+}
+
+.form-input {
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  font-size: 32rpx;
+}
+
+.icon-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.icon-option {
+  font-size: 40rpx;
+  padding: 12rpx;
+  border-radius: 12rpx;
+  background: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.icon-option.selected {
+  background: #FFB347;
+  transform: scale(1.1);
+}
+
+.radio-group {
+  display: flex;
+  gap: 20rpx;
+}
+
+.radio-option {
+  flex: 1;
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  text-align: center;
+  font-size: 28rpx;
+  transition: all 0.3s;
+}
+
+.radio-option.selected {
+  background: #FFB347;
+  color: white;
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

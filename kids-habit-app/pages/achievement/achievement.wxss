@@ -1,0 +1,174 @@
+/* pages/achievement/achievement.wxss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  text-align: center;
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  padding: 40rpx;
+}
+
+.header-title {
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+  padding: 20rpx;
+}
+
+.badge-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.badge-card:active {
+  transform: scale(0.95);
+}
+
+.badge-card.unlocked {
+  background: linear-gradient(135deg, #FFF9F0, #FFE5CC);
+  border: 4rpx solid #FFB347;
+}
+
+.badge-card.locked {
+  background: #f5f5f5;
+  opacity: 0.6;
+}
+
+.badge-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.badge-name {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.badge-status {
+  margin-top: 10rpx;
+}
+
+.unlock-date {
+  font-size: 20rpx;
+  color: #52C41A;
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 32rpx;
+  padding: 60rpx 40rpx;
+  width: 600rpx;
+  text-align: center;
+  animation: bounce 0.3s ease-in-out;
+}
+
+.modal-badge-icon {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+}
+
+.modal-badge-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.modal-badge-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+}
+
+.modal-badge-condition {
+  background: #FFF9F0;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 30rpx;
+}
+
+.condition-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.condition-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #FF9500;
+}
+
+.modal-badge-status {
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+}
+
+.modal-badge-status.unlocked {
+  background: #f6ffed;
+  color: #52C41A;
+}
+
+.modal-badge-status.locked {
+  background: #fff1f0;
+  color: #FF4D4F;
+}
+
+.modal-close-btn {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 60rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

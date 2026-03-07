@@ -1,0 +1,257 @@
+<!--pages/settings/settings.wxml-->
+<view class="container">
+  <!-- 家长验证入口 -->
+  <view class="parent-verify card" bindtap="openPasswordInput">
+    <view class="verify-icon">👨‍👩‍👧</view>
+    <view class="verify-text">家长设置区</view>
+    <view class="verify-hint">点击进入（需要密码）</view>
+  </view>
+
+  <!-- 家长管理内容（密码验证后显示） -->
+  <view class="parent-section" wx:if="{{!showPasswordInput}}">
+    <!-- 孩子档案 -->
+    <view class="section card">
+      <view class="section-title">👶 孩子档案</view>
+      
+      <view class="profile-editor">
+        <view class="avatar-preview">{{childProfile.avatar}}</view>
+        <view class="avatar-selector">
+          <view 
+            class="avatar-option {{childProfile.avatar === item ? 'selected' : ''}}"
+            wx:for="{{avatarOptions}}"
+            wx:key="*this"
+            data-avatar="{{item}}"
+            bindtap="selectAvatar"
+          >{{item}}</view>
+        </view>
+        <button class="btn-save" bindtap="updateChildProfile">保存档案</button>
+      </view>
+    </view>
+
+    <!-- 任务管理 -->
+    <view class="section card">
+      <view class="section-header">
+        <view class="section-title">📋 任务管理</view>
+        <button class="btn-add" bindtap="openTaskForm">+ 添加任务</button>
+      </view>
+
+      <view class="item-list">
+        <view class="item-card" wx:for="{{tasks}}" wx:key="_id">
+          <view class="item-icon">{{item.icon}}</view>
+          <view class="item-info">
+            <view class="item-name">{{item.name}}</view>
+            <view class="item-detail {{item.type === 'good' ? 'good-color' : 'bad-color'}}">
+              {{item.type === 'good' ? '+' : '-'}}{{item.points}} 积分 | {{item.frequency === 'daily' ? '每日' : '每周'}}
+            </view>
+          </view>
+          <view class="item-actions">
+            <view class="btn-edit" data-task="{{item}}" bindtap="openTaskForm">编辑</view>
+            <view class="btn-delete" data-task="{{item}}" bindtap="deleteTask">删除</view>
+          </view>
+        </view>
+        <view class="empty-tip" wx:if="{{tasks.length === 0}}">
+          还没有任务，点击上方按钮添加
+        </view>
+      </view>
+    </view>
+
+    <!-- 奖励管理 -->
+    <view class="section card">
+      <view class="section-header">
+        <view class="section-title">🎁 奖励管理</view>
+        <button class="btn-add" bindtap="openRewardForm">+ 添加奖励</button>
+      </view>
+
+      <view class="item-list">
+        <view class="item-card" wx:for="{{rewards}}" wx:key="_id">
+          <view class="item-icon">{{item.icon}}</view>
+          <view class="item-info">
+            <view class="item-name">{{item.name}}</view>
+            <view class="item-detail">{{item.points}} 积分</view>
+          </view>
+          <view class="item-actions">
+            <view class="btn-edit" data-reward="{{item}}" bindtap="openRewardForm">编辑</view>
+            <view class="btn-delete" data-reward="{{item}}" bindtap="deleteReward">删除</view>
+          </view>
+        </view>
+        <view class="empty-tip" wx:if="{{rewards.length === 0}}">
+          还没有奖励，点击上方按钮添加
+        </view>
+      </view>
+    </view>
+
+    <!-- 系统设置 -->
+    <view class="section card">
+      <view class="section-title">⚙️ 系统设置</view>
+      
+      <view class="setting-item">
+        <view class="setting-label">🔊 音效开关</view>
+        <switch 
+          checked="{{settings.soundEnabled}}" 
+          bindchange="toggleSound"
+          color="#FF9500"
+        />
+      </view>
+
+      <view class="setting-item" bindtap="resetTodayTasks">
+        <view class="setting-label">🔄 重置今日任务</view>
+        <view class="setting-action">点击重置</view>
+      </view>
+
+      <view class="setting-item danger" bindtap="clearAllData">
+        <view class="setting-label">🗑️ 清空所有数据</view>
+        <view class="setting-action danger-text">清空</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 密码输入弹窗 -->
+  <view class="modal-overlay {{showPasswordInput ? 'show' : ''}}" wx:if="{{showPasswordInput}}">
+    <view class="modal-content">
+      <view class="modal-title">🔐 家长验证</view>
+      <view class="modal-desc">{{settings.passwordSet ? '请输入 4 位密码' : '首次使用，请设置 4 位密码'}}</view>
+      
+      <input 
+        class="password-input" 
+        type="number" 
+        maxlength="4"
+        value="{{passwordValue}}"
+        bindinput="onPasswordInput"
+        placeholder="输入 4 位数字"
+      />
+      
+      <view class="password-error" wx:if="{{passwordError}}">{{passwordError}}</view>
+      
+      <view class="modal-buttons">
+        <button class="btn-cancel" bindtap="closePasswordInput">取消</button>
+        <button class="btn-confirm" bindtap="submitPassword">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 任务表单弹窗 -->
+  <view class="modal-overlay {{showTaskForm ? 'show' : ''}}" wx:if="{{showTaskForm}}">
+    <view class="modal-content form-modal">
+      <view class="modal-title">{{editingItem ? '编辑任务' : '添加任务'}}</view>
+      
+      <view class="form-group">
+        <view class="form-label">任务名称</view>
+        <input 
+          class="form-input" 
+          value="{{formData.name}}"
+          data-field="name"
+          bindinput="onFormInput"
+          placeholder="如：按时起床"
+        />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">任务图标</view>
+        <view class="icon-selector">
+          <view 
+            class="icon-option {{formData.icon === item ? 'selected' : ''}}"
+            wx:for="{{iconOptions}}"
+            wx:key="*this"
+            data-icon="{{item}}"
+            bindtap="selectIcon"
+          >{{item}}</view>
+        </view>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">积分值</view>
+        <input 
+          class="form-input" 
+          type="number"
+          value="{{formData.points}}"
+          data-field="points"
+          bindinput="onFormInput"
+        />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">任务类型</view>
+        <view class="radio-group">
+          <view 
+            class="radio-option {{formData.type === 'good' ? 'selected' : ''}}"
+            bindtap="onFormInput"
+            data-field="type"
+          >✅ 好习惯（加分）</view>
+          <view 
+            class="radio-option {{formData.type === 'bad' ? 'selected' : ''}}"
+            bindtap="onFormInput"
+            data-field="type"
+          >❌ 坏习惯（减分）</view>
+        </view>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">频率</view>
+        <view class="radio-group">
+          <view 
+            class="radio-option {{formData.frequency === 'daily' ? 'selected' : ''}}"
+            bindtap="onFormInput"
+            data-field="frequency"
+          >每日</view>
+          <view 
+            class="radio-option {{formData.frequency === 'weekly' ? 'selected' : ''}}"
+            bindtap="onFormInput"
+            data-field="frequency"
+          >每周</view>
+        </view>
+      </view>
+
+      <view class="modal-buttons">
+        <button class="btn-cancel" bindtap="closeTaskForm">取消</button>
+        <button class="btn-confirm" bindtap="saveTask">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 奖励表单弹窗 -->
+  <view class="modal-overlay {{showRewardForm ? 'show' : ''}}" wx:if="{{showRewardForm}}">
+    <view class="modal-content form-modal">
+      <view class="modal-title">{{editingItem ? '编辑奖励' : '添加奖励'}}</view>
+      
+      <view class="form-group">
+        <view class="form-label">奖励名称</view>
+        <input 
+          class="form-input" 
+          value="{{formData.name}}"
+          data-field="name"
+          bindinput="onFormInput"
+          placeholder="如：看动画片"
+        />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">奖励图标</view>
+        <view class="icon-selector">
+          <view 
+            class="icon-option {{formData.icon === item ? 'selected' : ''}}"
+            wx:for="{{iconOptions}}"
+            wx:key="*this"
+            data-icon="{{item}}"
+            bindtap="selectIcon"
+          >{{item}}</view>
+        </view>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">所需积分</view>
+        <input 
+          class="form-input" 
+          type="number"
+          value="{{formData.points}}"
+          data-field="points"
+          bindinput="onFormInput"
+        />
+      </view>
+
+      <view class="modal-buttons">
+        <button class="btn-cancel" bindtap="closeRewardForm">取消</button>
+        <button class="btn-confirm" bindtap="saveReward">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

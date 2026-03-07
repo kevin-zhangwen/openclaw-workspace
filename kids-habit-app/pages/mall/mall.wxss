@@ -1,0 +1,259 @@
+/* pages/mall/mall.wxss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  padding: 40rpx;
+  text-align: center;
+}
+
+.points-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.points-icon {
+  font-size: 60rpx;
+  margin-bottom: 10rpx;
+}
+
+.points-value {
+  font-size: 72rpx;
+  font-weight: bold;
+}
+
+.points-label {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.section-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin: 30rpx 20rpx 10rpx;
+}
+
+/* 奖励网格 */
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  padding: 20rpx;
+}
+
+.reward-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.reward-card:active {
+  transform: scale(0.95);
+}
+
+.reward-card.available {
+  background: linear-gradient(135deg, #FFF9F0, #FFE5CC);
+  border: 4rpx solid #FFB347;
+}
+
+.reward-card.unavailable {
+  background: #f5f5f5;
+  opacity: 0.6;
+}
+
+.reward-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.reward-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.reward-points {
+  font-size: 28rpx;
+  color: #FF9500;
+  font-weight: bold;
+}
+
+.reward-diff {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  margin-top: 8rpx;
+}
+
+/* 兑换历史 */
+.history-section {
+  margin-top: 20rpx;
+}
+
+.history-list {
+  padding: 0 20rpx;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.history-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+}
+
+.history-info {
+  flex: 1;
+}
+
+.history-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 4rpx;
+}
+
+.history-points {
+  font-size: 26rpx;
+  color: #FF4D4F;
+}
+
+.history-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 确认弹窗 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 32rpx;
+  padding: 60rpx 40rpx;
+  width: 600rpx;
+  text-align: center;
+  animation: bounce 0.3s ease-in-out;
+}
+
+.modal-reward-icon {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+}
+
+.modal-reward-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.modal-reward-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.modal-reward-points {
+  font-size: 32rpx;
+  color: #FF9500;
+  font-weight: bold;
+  margin-bottom: 40rpx;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 30rpx;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+/* 成功动画 */
+.success-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.success-animation.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.success-content {
+  text-align: center;
+  animation: bounce 0.5s ease-in-out infinite;
+}
+
+.success-icon {
+  font-size: 120rpx;
+}
+
+.success-text {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: white;
+  margin-top: 20rpx;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
