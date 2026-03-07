@@ -194,14 +194,18 @@
       <view class="profile-badge-preview">
         <view class="profile-section-title">🎖️ 最近解锁</view>
         <view class="recent-badges">
-          <view class="recent-badge" wx:for="{{recentBadges}}" wx:key="id" wx:if="{{recentBadges.length > 0}}">
-            <view class="recent-badge-icon">{{item.icon}}</view>
-            <view class="recent-badge-name">{{item.name}}</view>
-          </view>
-          <view class="no-badges" wx:else>
-            <view>还没有解锁徽章哦</view>
-            <view class="no-badges-hint">继续努力打卡吧！</view>
-          </view>
+          <block wx:if="{{recentBadges.length > 0}}">
+            <view class="recent-badge" wx:for="{{recentBadges}}" wx:key="id">
+              <view class="recent-badge-icon">{{item.icon}}</view>
+              <view class="recent-badge-name">{{item.name}}</view>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="no-badges">
+              <view>还没有解锁徽章哦</view>
+              <view class="no-badges-hint">继续努力打卡吧！</view>
+            </view>
+          </block>
         </view>
       </view>
     </view>
