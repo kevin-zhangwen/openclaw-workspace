@@ -98,6 +98,9 @@ Page({
         unlockedBadges: unlockedCount,
         recentBadges: recentBadges
       })
+    }).catch(err => {
+      console.error('加载徽章失败:', err)
+      this.setData({ unlockedBadges: 0, recentBadges: [] })
     })
 
     // 加载兑换次数
@@ -107,6 +110,9 @@ Page({
       this.setData({
         exchangeCount: res.total
       })
+    }).catch(err => {
+      console.error('加载兑换次数失败:', err)
+      this.setData({ exchangeCount: 0 })
     })
 
     // 加载用户详细信息
@@ -130,8 +136,12 @@ Page({
             registerDate: `${createDate.getFullYear()}-${String(createDate.getMonth() + 1).padStart(2, '0')}-${String(createDate.getDate()).padStart(2, '0')}`,
             usageDays: usageDays > 0 ? usageDays : 1
           })
+        } else {
+          this.setData({ registerDate: '-', usageDays: 1 })
         }
       }
+    }).catch(err => {
+      console.error('加载用户信息失败:', err)
     })
 
     // 加载本周统计
@@ -165,22 +175,30 @@ Page({
       })
     }).catch(err => {
       console.error('加载周统计失败:', err)
+      this.setData({
+        'weeklyStats.totalCheckIns': 0,
+        'weeklyStats.perfectDays': 0
+      })
     })
   },
 
   // 加载用户数据
   loadUserData: function () {
-    wx.showLoading({ title: '加载中...' })
-    
     const db = wx.cloud.database()
     const openid = app.globalData.openid
 
     if (!openid) {
+      wx.showLoading({ title: '加载中...', mask: true })
       wx.cloud.callFunction({
         name: 'login',
         success: res => {
           app.globalData.openid = res.result.openid
+          wx.hideLoading()
           this.loadUserData()
+        },
+        fail: err => {
+          wx.hideLoading()
+          console.error('获取 openid 失败:', err)
         }
       })
       return
@@ -202,10 +220,8 @@ Page({
       }
       this.loadTasks()
       this.loadRewards()
-      wx.hideLoading()
     }).catch(err => {
-      wx.hideLoading()
-      console.error(err)
+      console.error('加载用户数据失败:', err)
     })
   },
 
@@ -216,6 +232,9 @@ Page({
       createdBy: app.globalData.openid
     }).get().then(res => {
       this.setData({ tasks: res.data })
+    }).catch(err => {
+      console.error('加载任务失败:', err)
+      this.setData({ tasks: [] })
     })
   },
 
@@ -226,6 +245,9 @@ Page({
       createdBy: app.globalData.openid
     }).get().then(res => {
       this.setData({ rewards: res.data })
+    }).catch(err => {
+      console.error('加载奖励失败:', err)
+      this.setData({ rewards: [] })
     })
   },
 
