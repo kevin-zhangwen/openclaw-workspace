@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw 技术详解</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 科技风配色 */
+      --tech-primary: #00f0ff;
+      --tech-secondary: #7000ff;
+      --tech-accent: #ff006e;
+      --tech-bg: #0a0e27;
+      --tech-bg-light: #1a1f3a;
+      --tech-text: #e0e6ff;
+      
+      /* 经典风配色 */
+      --classic-gold: #c9a961;
+      --classic-navy: #1b2631;
+      --classic-cream: #f5f0e6;
+      
+      --font-tech: 'Orbitron', sans-serif;
+      --font-classic: 'Noto Sans SC', 'Source Han Sans CN', serif;
+      
+      --slide-padding: clamp(1rem, 4vw, 4rem);
+      --title-size: clamp(1.5rem, 5vw, 4rem);
+      --body-size: clamp(0.875rem, 1.5vw, 1.125rem);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+      font-family: var(--font-classic);
+      background: var(--tech-bg);
+      color: var(--tech-text);
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow {
+      position: fixed;
+      top: -50%;
+      right: -30%;
+      width: 80%;
+      height: 200%;
+      background: radial-gradient(ellipse, rgba(112, 0, 255, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    .slide {
+      width: 100vw;
+      min-height: 100vh;
+      height: 100dvh;
+      padding: var(--slide-padding);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--tech-primary), var(--tech-secondary), var(--tech-accent));
+    }
+
+    .slide-number {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      font-family: var(--font-tech);
+      font-size: 14px;
+      color: var(--tech-primary);
+      opacity: 0.8;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-family: var(--font-tech);
+      font-size: var(--title-size);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--tech-primary) 0%, var(--tech-secondary) 50%, var(--tech-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-family: var(--font-tech);
+      font-size: calc(var(--title-size) * 0.7);
+      font-weight: 700;
+      color: var(--tech-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 3px;
+    }
+
+    h3 {
+      font-family: var(--font-classic);
+      font-size: calc(var(--title-size) * 0.5);
+      font-weight: 700;
+      color: var(--classic-gold);
+      margin-bottom: 0.75rem;
+      border-left: 3px solid var(--classic-gold);
+      padding-left: 0.75rem;
+    }
+
+    p, li {
+      font-size: var(--body-size);
+      line-height: 1.8;
+      color: var(--tech-text);
+      margin-bottom: 0.75rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding-left: 2em;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--tech-primary);
+      font-weight: bold;
+    }
+
+    .highlight {
+      background: linear-gradient(120deg, rgba(0, 240, 255, 0.2) 0%, rgba(112, 0, 255, 0.15) 100%);
+      padding: 0.2em 0.5em;
+      border-radius: 4px;
+      font-weight: 600;
+      color: var(--tech-primary);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(10, 14, 39, 0.95) 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 240, 255, 0.1);
+      margin: 1rem 0;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--tech-primary), var(--tech-secondary));
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .diagram {
+      background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(10, 14, 39, 0.95) 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 10px 40px rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(112, 0, 255, 0.3);
+    }
+
+    .diagram-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .diagram-item {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(112, 0, 255, 0.1) 100%);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 150px;
+      border: 2px solid var(--tech-primary);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .diagram-item .icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 10px var(--tech-primary));
+    }
+
+    .diagram-arrow {
+      font-size: 2rem;
+      color: var(--tech-accent);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(10, 14, 39, 0.95) 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .data-table th {
+      background: linear-gradient(135deg, var(--tech-primary), var(--tech-secondary));
+      color: var(--tech-bg);
+      padding: 1rem;
+      text-align: left;
+      font-family: var(--font-tech);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover {
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--tech-primary) 0%, var(--tech-secondary) 50%, var(--tech-accent) 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.5rem;
+      width: 16px;
+      height: 16px;
+      background: var(--tech-primary);
+      border-radius: 50%;
+      border: 3px solid var(--tech-bg);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+    }
+
+    .timeline-item strong {
+      color: var(--tech-primary);
+      font-size: 1.1em;
+      font-family: var(--font-tech);
+      letter-spacing: 1px;
+    }
+
+    .nav-dots {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+    }
+
+    .nav-dots button {
+      display: block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--tech-primary);
+      background: transparent;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .nav-dots button.active {
+      background: var(--tech-primary);
+      box-shadow: 0 0 15px var(--tech-primary);
+    }
+
+    .export-pdf {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--tech-primary), var(--tech-secondary));
+      color: var(--tech-bg);
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 1000;
+      font-family: var(--font-tech);
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .export-pdf:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(0, 240, 255, 0.6);
+    }
+
+    .keyboard-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      font-size: 12px;
+      color: var(--tech-text);
+      opacity: 0.6;
+      z-index: 1000;
+      font-family: var(--font-tech);
+    }
+
+    .slide.cover {
+      text-align: center;
+      background: radial-gradient(ellipse at center, var(--tech-bg-light) 0%, var(--tech-bg) 100%);
+    }
+
+    .slide.cover .emoji {
+      font-size: 6rem;
+      display: block;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px var(--tech-primary));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .warning-box {
+      background: linear-gradient(135deg, rgba(255, 165, 0, 0.15) 0%, rgba(255, 69, 0, 0.1) 100%);
+      border-left: 4px solid var(--tech-accent);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border: 1px solid rgba(255, 0, 110, 0.3);
+    }
+
+    .success-box {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.15) 0%, rgba(0, 200, 100, 0.1) 100%);
+      border-left: 4px solid var(--tech-primary);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .tech-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(112, 0, 255, 0.2));
+      border: 1px solid var(--tech-primary);
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-family: var(--font-tech);
+      color: var(--tech-primary);
+      margin: 0.25rem;
+    }
+
+    .classic-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--classic-gold), transparent);
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .classic-divider::before {
+      content: '◆';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--classic-gold);
+      background: var(--tech-bg);
+      padding: 0 1rem;
+    }
+
+    @media print {
+      .nav-dots, .export-pdf, .keyboard-hint, .bg-grid, .bg-glow {
+        display: none !important;
+      }
+      
+      .slide {
+        height: 100vh;
+        page-break-after: always;
+        break-after: page;
+      }
+      
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: white !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- Slide 1: 封面 -->
+  <div class="slide cover">
+    <span class="emoji">🦞</span>
+    <h1>OpenClaw</h1>
+    <p class="subtitle" style="color: var(--classic-gold); font-size: 1.5rem; margin-top: 1rem;">下一代 AI 代理框架</p>
+    <p style="color: var(--tech-text); opacity: 0.8; margin-top: 0.5rem;">INSTALLATION · ARCHITECTURE · BEST PRACTICES</p>
+    <div style="margin-top: 2rem;">
+      <span class="tech-badge">Gateway</span>
+      <span class="tech-badge">Agents</span>
+      <span class="tech-badge">Channels</span>
+      <span class="tech-badge">Skills</span>
+    </div>
+    <div class="classic-divider" style="margin-top: 3rem;"></div>
+    <p style="color: var(--classic-gold); font-size: 1rem; letter-spacing: 3px;">v2026.2.9 · 科技赋能 · 经典传承</p>
+    <div class="slide-number">01 / 14</div>
+  </div>
+
+  <!-- Slide 2: 目录 -->
+  <div class="slide">
+    <h2>📊 CONTENTS</h2>
+    <h1 style="font-size: calc(var(--title-size) * 0.9);">目录概览</h1>
+    <div class="card-grid">
+      <div class="card">
+        <h3>PART 01</h3>
+        <h1 style="font-size: 1.8rem; color: var(--tech-primary);">OpenClaw 安装</h1>
+        <p style="color: var(--classic-gold);">部署与配置指南</p>
+        <ul style="margin-top: 1rem; font-size: 0.9rem;">
+          <li>系统要求</li>
+          <li>快速安装</li>
+          <li>配置认证</li>
+          <li>启动 Gateway</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>PART 02</h3>
+        <h1 style="font-size: 1.8rem; color: var(--tech-secondary);">实现原理</h1>
+        <p style="color: var(--classic-gold);">核心架构解析</p>
+        <ul style="margin-top: 1rem; font-size: 0.9rem;">
+          <li>Gateway 架构</li>
+          <li>Agent 运行时</li>
+          <li>Channel 系统</li>
+          <li>Skills 机制</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>PART 03</h3>
+        <h1 style="font-size: 1.8rem; color: var(--tech-accent);">最佳使用</h1>
+        <p style="color: var(--classic-gold);">实践与优化</p>
+        <ul style="margin-top: 1rem; font-size: 0.9rem;">
+          <li>CLI 命令</li>
+          <li>工具调用</li>
+          <li>会话管理</li>
+          <li>性能优化</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">02 / 14</div>
+  </div>
+
+  <!-- Slide 3: 第一部分封面 -->
+  <div class="slide">
+    <h2>PART 01</h2>
+    <h1>OpenClaw 安装</h1>
+    <p style="font-size: 1.2rem; margin-top: 1rem; color: var(--classic-gold);">INSTALLATION & DEPLOYMENT</p>
+    <div class="diagram">
+      <div class="diagram-box">
+        <div class="diagram-item">
+          <span class="icon">📦</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">安装 CLI</strong>
+        </div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-item">
+          <span class="icon">⚙️</span>
+          <strong style="color: var(--tech-secondary); font-family: var(--font-tech);">配置认证</strong>
+        </div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-item">
+          <span class="icon">🚀</span>
+          <strong style="color: var(--tech-accent); font-family: var(--font-tech);">启动 Gateway</strong>
+        </div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-item">
+          <span class="icon">🔗</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">连接 Channel</strong>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider"></div>
+    <p style="text-align: center; color: var(--classic-gold);">"工欲善其事，必先利其器"</p>
+    <div class="slide-number">03 / 14</div>
+  </div>
+
+  <!-- Slide 4: 系统要求与安装 -->
+  <div class="slide">
+    <h2>📦 系统要求与安装</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">SYSTEM REQUIREMENTS & INSTALLATION</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>系统要求</h3>
+        <table class="data-table" style="margin: 0; font-size: 0.9rem;">
+          <tr><td>操作系统</td><td>Linux / macOS / Windows</td></tr>
+          <tr><td>Node.js</td><td><span class="highlight">v20+</span></td></tr>
+          <tr><td>内存</td><td>≥4GB (推荐 8GB)</td></tr>
+          <tr><td>存储</td><td>≥1GB 可用空间</td></tr>
+          <tr><td>网络</td><td>WebSocket 支持</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>快速安装</h3>
+        <div style="background: rgba(0, 240, 255, 0.1); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; margin-top: 1rem;">
+          <p style="color: var(--tech-primary);"># 安装 OpenClaw CLI</p>
+          <p style="margin-top: 0.5rem;">npm install -g openclaw</p>
+          <p style="margin-top: 1rem; color: var(--tech-secondary);"># 或从源码安装</p>
+          <p style="margin-top: 0.5rem;">git clone https://github.com/openclaw/openclaw</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>验证安装</h3>
+        <ul>
+          <li><code>openclaw --version</code> 查看版本</li>
+          <li><code>openclaw --help</code> 查看帮助</li>
+          <li><code>openclaw doctor</code> 健康检查</li>
+          <li><code>openclaw status</code> 状态查询</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">04 / 14</div>
+  </div>
+
+  <!-- Slide 5: 配置与认证 -->
+  <div class="slide">
+    <h2>⚙️ 配置与认证</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">CONFIGURATION & AUTHENTICATION</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <strong>STEP 01 - 初始化配置</strong>
+        <p>运行 <code>openclaw setup</code> 创建 <code>~/.openclaw/openclaw.json</code> 和工作空间文件</p>
+      </div>
+      <div class="timeline-item">
+        <strong>STEP 02 - 模型认证</strong>
+        <p>配置 AI 模型 API Key：<br/>
+        <code>export ANTHROPIC_API_KEY="..."</code><br/>
+        或使用 <code>openclaw models auth paste-token --provider anthropic</code></p>
+      </div>
+      <div class="timeline-item">
+        <strong>STEP 03 - Channel 配置</strong>
+        <p>连接通讯渠道：<br/>
+        <code>openclaw channels login --verbose</code><br/>
+        支持 WhatsApp、Telegram、Signal、飞书等</p>
+      </div>
+      <div class="timeline-item">
+        <strong>STEP 04 - 启动 Gateway</strong>
+        <p><code>openclaw gateway</code> 启动网关服务<br/>
+        默认端口：18789 (WebSocket)</p>
+      </div>
+    </div>
+    <div class="warning-box">
+      <strong>⚠️ SECURITY:</strong> API Key 存储在 <code>~/.openclaw/.env</code> 或系统环境变量，确保文件权限安全！
+    </div>
+    <div class="slide-number">05 / 14</div>
+  </div>
+
+  <!-- Slide 6: 第二部分封面 -->
+  <div class="slide">
+    <h2>PART 02</h2>
+    <h1>实现原理</h1>
+    <p style="font-size: 1.2rem; margin-top: 1rem; color: var(--classic-gold);">ARCHITECTURE & PRINCIPLES</p>
+    <div class="diagram">
+      <div class="diagram-box">
+        <div class="diagram-item">
+          <span class="icon">🌐</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">Gateway</strong>
+          <p style="font-size: 0.8em;">控制平面</p>
+        </div>
+        <div class="diagram-item">
+          <span class="icon">🤖</span>
+          <strong style="color: var(--tech-secondary); font-family: var(--font-tech);">Agent</strong>
+          <p style="font-size: 0.8em;">运行时</p>
+        </div>
+        <div class="diagram-item">
+          <span class="icon">📱</span>
+          <strong style="color: var(--tech-accent); font-family: var(--font-tech);">Channels</strong>
+          <p style="font-size: 0.8em;">消息渠道</p>
+        </div>
+        <div class="diagram-item">
+          <span class="icon">🔧</span>
+          <strong style="color: var(--tech-primary); font-family: var(--font-tech);">Tools</strong>
+          <p style="font-size: 0.8em;">工具系统</p>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider"></div>
+    <p style="text-align: center; color: var(--tech-primary); font-family: var(--font-tech); letter-spacing: 2px;">
+      GATEWAY + AGENT + CHANNELS + SKILLS = OPENCLAW
+    </p>
+    <div class="slide-number">06 / 14</div>
+  </div>
+
+  <!-- Slide 7: Gateway 架构 -->
+  <div class="slide">
+    <h2>🌐 Gateway 架构</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">GATEWAY ARCHITECTURE</p>
+    <div class="card">
+      <h3>核心组件</h3>
+      <div class="card-grid" style="margin-top: 1rem;">
+        <div>
+          <h4 style="color: var(--tech-primary); font-family: var(--font-tech);">WebSocket Server</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>端口：18789 (默认)</li>
+            <li>协议：JSON-RPC 2.0</li>
+            <li>支持多客户端并发</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: var(--tech-secondary); font-family: var(--font-tech);">Session Manager</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>会话状态管理</li>
+            <li>JSONL 持久化存储</li>
+            <li>位置：~/.openclaw/agents/&lt;id&gt;/sessions/</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: var(--tech-accent); font-family: var(--font-tech);">Tool Router</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>工具调用路由</li>
+            <li>权限控制</li>
+            <li>结果聚合</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>配置管理</h3>
+        <ul>
+          <li>配置文件：<code>~/.openclaw/openclaw.json</code></li>
+          <li>环境变量：<code>~/.openclaw/.env</code></li>
+          <li>支持 Profile 隔离：<code>--profile &lt;name&gt;</code></li>
+          <li>热重载配置：<code>openclaw config apply</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>安全机制</h3>
+        <ul>
+          <li>Exec 审批模式（off/on-miss/always）</li>
+          <li>工具白名单控制</li>
+          <li>凭证加密存储</li>
+          <li>会话隔离</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">07 / 14</div>
+  </div>
+
+  <!-- Slide 8: Agent 运行时 -->
+  <div class="slide">
+    <h2>🤖 Agent 运行时</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">AGENT RUNTIME</p>
+    <div class="card">
+      <h3>Agent Loop 生命周期</h3>
+      <div class="diagram" style="margin-top: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 0.5rem;">
+          <div class="diagram-item" style="min-width: 120px;">
+            <span class="icon">📨</span>
+            <strong style="color: var(--tech-primary); font-family: var(--font-tech); font-size: 0.9rem;">消息接收</strong>
+          </div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-item" style="min-width: 120px;">
+            <span class="icon">📚</span>
+            <strong style="color: var(--tech-secondary); font-family: var(--font-tech); font-size: 0.9rem;">上下文组装</strong>
+          </div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-item" style="min-width: 120px;">
+            <span class="icon">🧠</span>
+            <strong style="color: var(--tech-accent); font-family: var(--font-tech); font-size: 0.9rem;">模型推理</strong>
+          </div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-item" style="min-width: 120px;">
+            <span class="icon">🔧</span>
+            <strong style="color: var(--tech-primary); font-family: var(--font-tech); font-size: 0.9rem;">工具执行</strong>
+          </div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-item" style="min-width: 120px;">
+            <span class="icon">📤</span>
+            <strong style="color: var(--tech-secondary); font-family: var(--font-tech); font-size: 0.9rem;">响应流式</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>工作空间</h3>
+        <ul>
+          <li>默认：<code>~/.openclaw/workspace</code></li>
+          <li>核心文件：AGENTS.md, SOUL.md, TOOLS.md</li>
+          <li>记忆系统：MEMORY.md + memory/*.md</li>
+          <li>Sandbox 隔离（可选）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>流式输出</h3>
+        <ul>
+          <li>Assistant deltas 实时流</li>
+          <li>Tool 事件流（start/update/end）</li>
+          <li>Lifecycle 事件（start/end/error）</li>
+          <li>支持 Block 流式分块</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">08 / 14</div>
+  </div>
+
+  <!-- Slide 9: Channel 系统 -->
+  <div class="slide">
+    <h2>📱 Channel 系统</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">COMMUNICATION CHANNELS</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>渠道类型</th>
+          <th>支持平台</th>
+          <th>特性</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>即时通讯</strong></td>
+          <td>WhatsApp, Telegram, Signal, WeChat</td>
+          <td>个人聊天、群组消息</td>
+        </tr>
+        <tr>
+          <td><strong>企业协作</strong></td>
+          <td>Slack, Discord, 飞书，钉钉，企业微信</td>
+          <td>频道、机器人、卡片消息</td>
+        </tr>
+        <tr>
+          <td><strong>邮件</strong></td>
+          <td>Gmail, Outlook, IMAP/SMTP</td>
+          <td>邮件收发、附件处理</td>
+        </tr>
+        <tr>
+          <td><strong>社交媒体</strong></td>
+          <td>Twitter, Reddit, LinkedIn</td>
+          <td>发帖、监控、互动</td>
+        </tr>
+        <tr>
+          <td><strong>协议层</strong></td>
+          <td>Matrix, Nostr, XMPP</td>
+          <td>去中心化通讯</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="success-box">
+      <strong>✅ FLEXIBILITY:</strong> 支持多渠道同时连接，消息自动路由到对应会话！
+    </div>
+    <div class="slide-number">09 / 14</div>
+  </div>
+
+  <!-- Slide 10: Skills 机制 -->
+  <div class="slide">
+    <h2>🔧 Skills 机制</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">SKILLS SYSTEM</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Skills 来源</h3>
+        <ul>
+          <li><strong>Bundled:</strong> 内置技能（随安装包）</li>
+          <li><strong>Managed:</strong> <code>~/.openclaw/skills</code></li>
+          <li><strong>Workspace:</strong> <code>&lt;workspace&gt;/skills</code></li>
+          <li>优先级：Workspace > Managed > Bundled</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Skill 结构</h3>
+        <div style="background: rgba(0, 240, 255, 0.1); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem;">
+          <p style="color: var(--tech-primary);">skill-name/</p>
+          <p style="margin-left: 1rem;">├── SKILL.md</p>
+          <p style="margin-left: 1rem;">├── index.js</p>
+          <p style="margin-left: 1rem;">├── package.json</p>
+          <p style="margin-left: 1rem;">└── assets/</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>示例 Skills</h3>
+        <ul>
+          <li>🌤️ weather - 天气查询</li>
+          <li>🔍 web_search - 网络搜索</li>
+          <li>📊 github - GitHub CLI</li>
+          <li>📝 feishu-doc - 飞书文档</li>
+          <li>🎨 frontend-slides-cn - PPT 生成</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">10 / 14</div>
+  </div>
+
+  <!-- Slide 11: 第三部分封面 -->
+  <div class="slide">
+    <h2>PART 03</h2>
+    <h1>最佳使用</h1>
+    <p style="font-size: 1.2rem; margin-top: 1rem; color: var(--classic-gold);">BEST PRACTICES & OPTIMIZATION</p>
+    <div class="card" style="margin-top: 2rem;">
+      <h3>使用场景</h3>
+      <div style="display: flex; justify-content: space-around; text-align: center; margin-top: 1rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span style="font-size: 2rem;">💬</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-primary);">智能对话</strong></p>
+        </div>
+        <div>
+          <span style="font-size: 2rem;">🔧</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-secondary);">工具调用</strong></p>
+        </div>
+        <div>
+          <span style="font-size: 2rem;">📅</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-accent);">定时任务</strong></p>
+        </div>
+        <div>
+          <span style="font-size: 2rem;">🔔</span>
+          <p><strong style="font-family: var(--font-tech); color: var(--tech-primary);">消息提醒</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider"></div>
+    <p style="text-align: center; color: var(--classic-gold); font-style: italic;">"自动化你的工作流"</p>
+    <div class="slide-number">11 / 14</div>
+  </div>
+
+  <!-- Slide 12: CLI 命令参考 -->
+  <div class="slide">
+    <h2>📋 CLI 命令参考</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">COMMAND LINE REFERENCE</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>命令分类</th>
+          <th>常用命令</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Gateway</strong></td>
+          <td><code>gateway</code>, <code>health</code>, <code>logs</code></td>
+          <td>网关控制、健康检查、日志查看</td>
+        </tr>
+        <tr>
+          <td><strong>Agent</strong></td>
+          <td><code>agent</code>, <code>agents</code>, <code>sessions</code></td>
+          <td>运行 Agent、管理会话</td>
+        </tr>
+        <tr>
+          <td><strong>Channels</strong></td>
+          <td><code>channels login</code>, <code>status</code></td>
+          <td>渠道登录、状态查询</td>
+        </tr>
+        <tr>
+          <td><strong>Message</strong></td>
+          <td><code>message send</code>, <code>broadcast</code></td>
+          <td>发送消息、广播通知</td>
+        </tr>
+        <tr>
+          <td><strong>Config</strong></td>
+          <td><code>config get/set</code>, <code>configure</code></td>
+          <td>配置管理、交互式设置</td>
+        </tr>
+        <tr>
+          <td><strong>Tools</strong></td>
+          <td><code>browser</code>, <code>nodes</code>, <code>cron</code></td>
+          <td>浏览器、节点、定时任务</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warning-box">
+      <strong>⚠️ TIP:</strong> 使用 <code>openclaw &lt;command&gt; --help</code> 查看具体命令的详细参数！
+    </div>
+    <div class="slide-number">12 / 14</div>
+  </div>
+
+  <!-- Slide 13: 性能优化 -->
+  <div class="slide">
+    <h2>⚡ 性能优化</h2>
+    <p style="color: var(--classic-gold); margin-bottom: 1.5rem;">PERFORMANCE OPTIMIZATION</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>内存管理</h3>
+        <ul>
+          <li>会话历史限制：<code>messageLimit</code></li>
+          <li>工具输出截断：<code>maxOutputChars</code></li>
+          <li>后台任务 TTL：<code>cleanupMs</code></li>
+          <li>定期清理旧会话</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>并发控制</h3>
+        <ul>
+          <li>会话级序列化（防冲突）</li>
+          <li>全局队列（可选）</li>
+          <li>超时控制：<code>timeoutSeconds</code></li>
+          <li>后台任务：<code>yieldMs</code> 参数</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>缓存策略</h3>
+        <ul>
+          <li>Skills 快照缓存</li>
+          <li>模型认证缓存</li>
+          <li>Channel 连接复用</li>
+          <li>配置文件热加载</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">13 / 14</div>
+  </div>
+
+  <!-- Slide 14: 结束页 -->
+  <div class="slide cover">
+    <span class="emoji">🦞</span>
+    <h1>THANK YOU</h1>
+    <p class="subtitle">OpenClaw · 下一代 AI 代理框架</p>
+    <div class="card" style="margin-top: 3rem; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+      <h3>📌 核心要点回顾</h3>
+      <div class="card-grid" style="margin-top: 1rem;">
+        <div>
+          <h4 style="color: var(--tech-primary); font-family: var(--font-tech);">INSTALL 安装</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>npm 安装 CLI</li>
+            <li>配置 API Key</li>
+            <li>启动 Gateway</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: var(--tech-secondary); font-family: var(--font-tech);">ARCHITECTURE 架构</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>Gateway 控制平面</li>
+            <li>Agent 运行时</li>
+            <li>Channel 系统</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: var(--tech-accent); font-family: var(--font-tech);">USAGE 使用</h4>
+          <ul style="font-size: 0.9rem;">
+            <li>CLI 命令</li>
+            <li>Skills 扩展</li>
+            <li>性能优化</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="classic-divider" style="margin-top: 2rem;"></div>
+    <p style="margin-top: 2rem; color: var(--classic-gold); letter-spacing: 2px;">
+      文档：https://docs.openclaw.ai · GitHub: openclaw/openclaw
+    </p>
+    <div class="slide-number">14 / 14</div>
+  </div>
+
+  <!-- 导航元素 -->
+  <div class="nav-dots" id="navDots"></div>
+  <button class="export-pdf" onclick="window.print()">📄 EXPORT PDF</button>
+  <div class="keyboard-hint">↑↓ PAGE UP/DOWN</div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const navDots = document.getElementById('navDots');
+    
+    slides.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.addEventListener('click', () => {
+        slides[index].scrollIntoView({ behavior: 'smooth' });
+      });
+      navDots.appendChild(dot);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = Array.from(slides).indexOf(entry.target);
+          document.querySelectorAll('.nav-dots button').forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    slides.forEach(slide => observer.observe(slide));
+
+    let currentSlide = 0;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault();
+        if (currentSlide < slides.length - 1) {
+          slides[currentSlide + 1].scrollIntoView({ behavior: 'smooth' });
+          currentSlide++;
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        if (currentSlide > 0) {
+          slides[currentSlide - 1].scrollIntoView({ behavior: 'smooth' });
+          currentSlide--;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
