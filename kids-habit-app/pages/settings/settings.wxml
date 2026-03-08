@@ -1,5 +1,33 @@
 <!--pages/settings/settings.wxml-->
 <view class="container">
+  <!-- 个人信息卡片 -->
+  <view class="profile-card card" bindtap="showProfileDetail">
+    <view class="profile-header">
+      <view class="profile-avatar">{{childProfile.avatar}}</view>
+      <view class="profile-info">
+        <view class="profile-nickname">{{childProfile.nickname}}</view>
+        <view class="profile-points">⭐ {{points}} 积分</view>
+      </view>
+      <view class="profile-arrow">›</view>
+    </view>
+    <view class="profile-stats">
+      <view class="stat-item">
+        <view class="stat-value">🔥 {{continuousDays}}</view>
+        <view class="stat-label">连续天数</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <view class="stat-value">📋 {{tasks.length}}</view>
+        <view class="stat-label">任务数</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <view class="stat-value">🏆 {{unlockedBadges}}</view>
+        <view class="stat-label">已解锁徽章</view>
+      </view>
+    </view>
+  </view>
+
   <!-- 家长验证入口 -->
   <view class="parent-verify card" bindtap="openPasswordInput">
     <view class="verify-icon">👨‍👩‍👧</view>
@@ -101,6 +129,84 @@
       <view class="setting-item danger" bindtap="clearAllData">
         <view class="setting-label">🗑️ 清空所有数据</view>
         <view class="setting-action danger-text">清空</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 个人信息详情弹窗 -->
+  <view class="modal-overlay {{showProfileDetailModal ? 'show' : ''}}" wx:if="{{showProfileDetailModal}}" bindtap="closeProfileDetail">
+    <view class="modal-content profile-modal" catchtap="true">
+      <view class="modal-close" bindtap="closeProfileDetail">✕</view>
+      
+      <view class="profile-modal-header">
+        <view class="profile-modal-avatar">{{childProfile.nickname}}</view>
+        <view class="profile-modal-name">{{childProfile.nickname}}</view>
+        <view class="profile-modal-points">⭐ 当前积分：{{points}}</view>
+      </view>
+      
+      <view class="profile-stats-grid">
+        <view class="profile-stat-card">
+          <view class="profile-stat-icon">🔥</view>
+          <view class="profile-stat-value">{{continuousDays}}</view>
+          <view class="profile-stat-label">连续打卡天数</view>
+        </view>
+        <view class="profile-stat-card">
+          <view class="profile-stat-icon">📋</view>
+          <view class="profile-stat-value">{{tasks.length}}</view>
+          <view class="profile-stat-label">任务总数</view>
+        </view>
+        <view class="profile-stat-card">
+          <view class="profile-stat-icon">🏆</view>
+          <view class="profile-stat-value">{{unlockedBadges}}</view>
+          <view class="profile-stat-label">已解锁徽章</view>
+        </view>
+        <view class="profile-stat-card">
+          <view class="profile-stat-icon">🎁</view>
+          <view class="profile-stat-value">{{exchangeCount}}</view>
+          <view class="profile-stat-label">兑换次数</view>
+        </view>
+      </view>
+      
+      <view class="profile-section">
+        <view class="profile-section-title">📅 注册信息</view>
+        <view class="profile-info-row">
+          <view class="profile-info-label">注册时间</view>
+          <view class="profile-info-value">{{registerDate}}</view>
+        </view>
+        <view class="profile-info-row">
+          <view class="profile-info-label">使用天数</view>
+          <view class="profile-info-value">{{usageDays}} 天</view>
+        </view>
+      </view>
+      
+      <view class="profile-section">
+        <view class="profile-section-title">📊 本周统计</view>
+        <view class="profile-info-row">
+          <view class="profile-info-label">本周打卡</view>
+          <view class="profile-info-value">{{weeklyStats.totalCheckIns}} 次</view>
+        </view>
+        <view class="profile-info-row">
+          <view class="profile-info-label">完美天数</view>
+          <view class="profile-info-value">{{weeklyStats.perfectDays}} 天</view>
+        </view>
+      </view>
+      
+      <view class="profile-badge-preview">
+        <view class="profile-section-title">🎖️ 最近解锁</view>
+        <view class="recent-badges">
+          <block wx:if="{{recentBadges.length > 0}}">
+            <view class="recent-badge" wx:for="{{recentBadges}}" wx:key="id">
+              <view class="recent-badge-icon">{{item.icon}}</view>
+              <view class="recent-badge-name">{{item.name}}</view>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="no-badges">
+              <view>还没有解锁徽章哦</view>
+              <view class="no-badges-hint">继续努力打卡吧！</view>
+            </view>
+          </block>
+        </view>
       </view>
     </view>
   </view>

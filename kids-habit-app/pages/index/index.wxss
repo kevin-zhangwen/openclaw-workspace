@@ -60,6 +60,55 @@
   padding: 40rpx;
 }
 
+/* 周统计卡片 */
+.weekly-stats {
+  margin-top: 20rpx;
+  background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.stats-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1976D2;
+}
+
+.stats-week {
+  font-size: 24rpx;
+  color: #64B5F6;
+  background: rgba(255,255,255,0.5);
+  padding: 4rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+  padding: 20rpx 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #1976D2;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #64B5F6;
+}
+
 .complete-icon {
   font-size: 80rpx;
   margin-bottom: 16rpx;
@@ -224,4 +273,63 @@
 @keyframes bounce {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.1); }
+}
+
+/* 徽章解锁动画 */
+.badge-unlock {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.badge-unlock.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.badge-unlock-content {
+  text-align: center;
+  animation: zoomIn 0.5s ease-out;
+}
+
+.badge-unlock-icon {
+  font-size: 150rpx;
+  animation: rotate 1s ease-in-out;
+}
+
+.badge-unlock-title {
+  font-size: 48rpx;
+  color: #FFD700;
+  font-weight: bold;
+  margin-top: 30rpx;
+  text-shadow: 0 0 20rpx rgba(255, 215, 0, 0.5);
+}
+
+.badge-unlock-text {
+  font-size: 32rpx;
+  color: #fff;
+  margin-top: 16rpx;
+  opacity: 0.9;
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(-180deg) scale(0); }
+  100% { transform: rotate(0deg) scale(1); }
 }

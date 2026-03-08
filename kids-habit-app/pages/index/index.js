@@ -15,7 +15,17 @@ Page({
     showCelebration: false,
     celebrationType: '',
     celebrationText: '',
-    showAllComplete: false
+    showAllComplete: false,
+    showBadgeUnlock: false,
+    badgeUnlockData: {
+      icon: '',
+      name: ''
+    },
+    weeklyStats: {
+      totalCheckIns: 0,
+      perfectDays: 0,
+      weekLabel: ''
+    }
   },
 
   onLoad: function () {
@@ -24,6 +34,12 @@ Page({
 
   onShow: function () {
     this.loadUserData()
+    // 检查积分达人徽章（防止之前已有 500+ 积分但未解锁）
+    if (this.data.points >= 500) {
+      this.checkPointsBadge(this.data.points)
+    }
+    // 加载周统计
+    this.loadWeeklyStats()
   },
 
   // 加载用户数据
@@ -157,6 +173,7 @@ Page({
   confirmCheckIn: function (taskId, taskIndex, task) {
     const db = wx.cloud.database()
     const pointsChange = task.type === 'good' ? task.points : -task.points
+    const newPoints = this.data.points + pointsChange
 
     // 更新任务状态
     db.collection('tasks').doc(taskId).update({
@@ -175,15 +192,24 @@ Page({
       // 更新本地数据
       const tasks = this.data.tasks
       tasks[taskIndex].completedToday = true
+      const newTodayCompleted = this.data.todayCompleted + 1
       this.setData({
         tasks: tasks,
-        todayCompleted: this.data.todayCompleted + 1
+        todayCompleted: newTodayCompleted
       })
 
       // 检查是否全部完成
-      if (this.data.todayCompleted + 1 === this.data.todayTotal) {
+      if (newTodayCompleted === this.data.todayTotal) {
         this.setData({ showAllComplete: true })
+        // 解锁完美一天徽章
+        this.unlockBadge('all_daily')
       }
+
+      // 检查第一次打卡徽章
+      this.checkFirstCheckin()
+
+      // 检查积分达人徽章
+      this.checkPointsBadge(newPoints)
 
       // 检查连续打卡
       this.checkContinuousDays()
@@ -236,12 +262,14 @@ Page({
           }
         }).then(() => {
           this.setData({ points: newPoints })
+          // 检查积分达人徽章
+          this.checkPointsBadge(newPoints)
         })
       }
     })
   },
 
-  // 检查连续打卡天数
+  // 检查连续打卡天数并解锁徽章
   checkContinuousDays: function () {
     const db = wx.cloud.database()
     const today = new Date().toISOString().split('T')[0]
@@ -271,9 +299,123 @@ Page({
           }
         }).then(() => {
           this.setData({ continuousDays: newContinuousDays })
+          // 检查连续打卡徽章
+          this.checkContinuousBadges(newContinuousDays)
         })
       }
     })
+  },
+
+  // 检查并解锁连续打卡徽章
+  checkContinuousBadges: function (continuousDays) {
+    const badges = []
+    if (continuousDays >= 3) badges.push('continuous_3')
+    if (continuousDays >= 7) badges.push('continuous_7')
+    if (continuousDays >= 30) badges.push('continuous_30')
+    
+    badges.forEach(badgeId => {
+      this.unlockBadge(badgeId)
+    })
+  },
+
+  // 解锁徽章
+  unlockBadge: function (badgeId) {
+    const db = wx.cloud.database()
+    const openid = app.globalData.openid
+
+    db.collection('achievements').where({
+      openid: openid
+    }).get().then(res => {
+      if (res.data.length > 0) {
+        const userAchievements = res.data[0]
+        const badges = userAchievements.badges || []
+        
+        // 检查是否已解锁
+        const exists = badges.find(b => b.id === badgeId)
+        if (!exists) {
+          badges.push({
+            id: badgeId,
+            unlockDate: db.serverDate()
+          })
+          
+          db.collection('achievements').doc(userAchievements._id).update({
+            data: { badges }
+          }).then(() => {
+            // 显示解锁提示
+            this.showBadgeUnlock(badgeId)
+          })
+        }
+      } else {
+        // 创建新记录
+        db.collection('achievements').add({
+          data: {
+            openid: openid,
+            badges: [{
+              id: badgeId,
+              unlockDate: db.serverDate()
+            }]
+          }
+        }).then(() => {
+          this.showBadgeUnlock(badgeId)
+        })
+      }
+    })
+  },
+
+  // 显示徽章解锁提示
+  showBadgeUnlock: function (badgeId) {
+    const badgeData = {
+      'first_checkin': { icon: '🌱', name: '第一次打卡' },
+      'continuous_3': { icon: '🔥', name: '连续 3 天' },
+      'continuous_7': { icon: '⭐', name: '连续 7 天' },
+      'continuous_30': { icon: '💎', name: '连续 30 天' },
+      'all_daily': { icon: '🎯', name: '完美一天' },
+      'first_exchange': { icon: '🛒', name: '首次兑换' },
+      'points_500': { icon: '💰', name: '积分达人' }
+    }
+    
+    const data = badgeData[badgeId]
+    if (!data) return
+    
+    this.setData({
+      showBadgeUnlock: true,
+      badgeUnlockData: data
+    })
+    
+    // 3 秒后自动关闭
+    setTimeout(() => {
+      this.setData({
+        showBadgeUnlock: false
+      })
+    }, 3000)
+  },
+
+  // 检查第一次打卡徽章
+  checkFirstCheckin: function () {
+    const db = wx.cloud.database()
+    const openid = app.globalData.openid
+
+    db.collection('achievements').where({
+      openid: openid
+    }).get().then(res => {
+      if (res.data.length === 0) {
+        // 还没有成就记录，解锁第一次打卡徽章
+        this.unlockBadge('first_checkin')
+      } else {
+        const badges = res.data[0].badges || []
+        const hasFirstCheckin = badges.find(b => b.id === 'first_checkin')
+        if (!hasFirstCheckin) {
+          this.unlockBadge('first_checkin')
+        }
+      }
+    })
+  },
+
+  // 检查积分达人徽章
+  checkPointsBadge: function (points) {
+    if (points >= 500) {
+      this.unlockBadge('points_500')
+    }
   },
 
   // 显示庆祝动画
@@ -301,5 +443,55 @@ Page({
         }
       }
     })
+  },
+
+  // 加载周统计
+  loadWeeklyStats: function () {
+    const db = wx.cloud.database()
+    const openid = app.globalData.openid
+    
+    // 计算本周的起始和结束日期
+    const now = new Date()
+    const dayOfWeek = now.getDay() // 0 是周日
+    const startOfWeek = new Date(now)
+    startOfWeek.setDate(now.getDate() - dayOfWeek)
+    startOfWeek.setHours(0, 0, 0, 0)
+    
+    // 查询本周的任务完成记录
+    db.collection('tasks').where({
+      createdBy: openid,
+      lastCompletedAt: db.command.gte(startOfWeek)
+    }).get().then(res => {
+      const tasks = res.data
+      const totalCheckIns = tasks.filter(t => t.completedToday || t.lastCompletedAt).length
+      
+      // 计算完美天数（需要查询历史记录，这里简化处理）
+      // 实际项目中应该在 users 集合中记录每日完成情况
+      const perfectDays = Math.floor(totalCheckIns / (this.data.todayTotal || 1))
+      
+      // 生成本周标签
+      const weekLabel = `第${this.getWeekNumber(now)}周`
+      
+      this.setData({
+        'weeklyStats.totalCheckIns': totalCheckIns,
+        'weeklyStats.perfectDays': perfectDays,
+        'weeklyStats.weekLabel': weekLabel
+      })
+    }).catch(err => {
+      console.error('加载周统计失败:', err)
+    })
+  },
+
+  // 计算是一年中的第几周
+  getWeekNumber: function (date) {
+    const target = new Date(date.valueOf())
+    const dayNr = (date.getDay() + 6) % 7
+    target.setDate(target.getDate() - dayNr + 3)
+    const firstThursday = target.valueOf()
+    target.setMonth(0, 1)
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7)
+    }
+    return 1 + Math.ceil((firstThursday - target) / 604800000)
   }
 })
