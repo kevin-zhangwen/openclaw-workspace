@@ -1,5 +1,6 @@
 {
   "description": "儿童习惯养成小程序",
+  "cloudfunctionRoot": "cloud/",
   "packOptions": {
     "ignore": [],
     "include": []
@@ -54,5 +55,6 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "simulatorPluginLibVersion": {}
+  "simulatorPluginLibVersion": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

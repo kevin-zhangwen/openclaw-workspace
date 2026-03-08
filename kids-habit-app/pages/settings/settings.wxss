@@ -4,6 +4,15 @@
   padding-bottom: 120rpx;
 }
 
+/* 通用卡片样式 */
+.card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.08);
+}
+
 /* 个人信息卡片 */
 .profile-card {
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -21,6 +30,17 @@
 .profile-avatar {
   font-size: 80rpx;
   margin-right: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar-image {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2rpx solid rgba(255,255,255,0.5);
 }
 
 .profile-info {
@@ -74,6 +94,18 @@
   margin: 0 20rpx;
 }
 
+/* 通用 section */
+.section {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  padding: 0 0 20rpx 0;
+}
+
 /* 家长验证入口 */
 .parent-verify {
   display: flex;
@@ -101,92 +133,76 @@
   color: #666;
 }
 
-/* 家长管理区域 */
-.parent-section {
-  margin-top: 20rpx;
-}
-
-.section {
-  margin-bottom: 20rpx;
-}
-
-/* 通用 section title（用于没有 header 的区域） */
-.section-title {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-  padding: 24rpx;
-  margin-bottom: 16rpx;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20rpx;
-  padding: 0 24rpx;
-}
-
-.section-title {
-  font-size: 30rpx;
-  font-weight: bold;
-  color: #333;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-.btn-add {
-  background: linear-gradient(135deg, #FF9500, #FFB347);
-  color: white;
-  border: none;
-  border-radius: 24rpx;
-  padding: 12rpx 24rpx;
-  font-size: 24rpx;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  box-shadow: 0 2rpx 8rpx rgba(255, 149, 0, 0.25);
-}
-
-.btn-add:active {
-  transform: scale(0.95);
-  box-shadow: 0 1rpx 4rpx rgba(255, 149, 0, 0.25);
-}
-
-/* 孩子档案编辑器 */
-.profile-editor {
+/* 孩子档案简化版 */
+.child-profile-simple {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20rpx 0;
 }
 
-.avatar-preview {
-  font-size: 100rpx;
+.child-avatar-wrapper {
+  position: relative;
+  width: 180rpx;
+  height: 180rpx;
   margin-bottom: 30rpx;
 }
 
-.avatar-selector {
+.child-avatar-image {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6rpx solid #FFB347;
+}
+
+.child-avatar-emoji {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF9500, #FFB347);
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 16rpx;
+  font-size: 100rpx;
+}
+
+.avatar-edit-hint {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60rpx;
+  height: 60rpx;
+  background: #667eea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  border: 4rpx solid white;
+}
+
+.child-nickname-wrapper {
+  width: 100%;
+  max-width: 400rpx;
   margin-bottom: 30rpx;
 }
 
-.avatar-option {
-  font-size: 48rpx;
-  padding: 16rpx;
-  border-radius: 16rpx;
-  background: #f5f5f5;
-  transition: all 0.3s;
+.nickname-label {
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
 }
 
-.avatar-option.selected {
-  background: #FFB347;
-  transform: scale(1.1);
+.nickname-input-simple {
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 24rpx 32rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
 }
 
 .btn-save {
@@ -199,103 +215,7 @@
   font-weight: bold;
 }
 
-/* 列表项 */
-.item-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.item-card {
-  display: flex;
-  align-items: center;
-  padding: 24rpx;
-  margin: 0 24rpx;
-  border-bottom: 2rpx solid #f5f5f5;
-}
-
-.item-card:first-child {
-  border-top: 2rpx solid #f5f5f5;
-}
-
-.item-icon {
-  font-size: 48rpx;
-  margin-right: 20rpx;
-}
-
-.item-info {
-  flex: 1;
-}
-
-.item-name {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 4rpx;
-}
-
-.item-detail {
-  font-size: 24rpx;
-  color: #666;
-}
-
-.item-actions {
-  display: flex;
-  gap: 16rpx;
-}
-
-.btn-edit {
-  color: #FF9500;
-  font-size: 26rpx;
-  padding: 8rpx 16rpx;
-}
-
-.btn-delete {
-  color: #FF4D4F;
-  font-size: 26rpx;
-  padding: 8rpx 16rpx;
-}
-
-.empty-tip {
-  text-align: center;
-  padding: 60rpx 40rpx;
-  color: #999;
-  font-size: 28rpx;
-  background: #fafafa;
-  margin: 0 24rpx 24rpx;
-  border-radius: 16rpx;
-}
-
-/* 设置项 */
-.setting-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24rpx 0;
-  border-bottom: 2rpx solid #f5f5f5;
-}
-
-.setting-item:last-child {
-  border-bottom: none;
-}
-
-.setting-label {
-  font-size: 32rpx;
-  color: #333;
-}
-
-.setting-action {
-  font-size: 28rpx;
-  color: #FF9500;
-}
-
-.setting-item.danger .setting-label {
-  color: #FF4D4F;
-}
-
-.setting-action.danger-text {
-  color: #FF4D4F;
-}
-
-/* 密码输入弹窗 */
+/* 个人信息详情弹窗 */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -320,8 +240,7 @@
 .modal-content {
   background: white;
   border-radius: 32rpx;
-  padding: 60rpx 40rpx;
-  width: 600rpx;
+  width: 700rpx;
   text-align: center;
   animation: bounce 0.3s ease-in-out;
   position: relative;
@@ -329,12 +248,6 @@
   overflow-y: auto;
 }
 
-.form-modal {
-  width: 700rpx;
-  text-align: left;
-}
-
-/* 个人信息详情弹窗 */
 .profile-modal {
   width: 700rpx;
   text-align: left;
@@ -366,6 +279,17 @@
 .profile-modal-avatar {
   font-size: 100rpx;
   margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-modal-avatar-image {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4rpx solid rgba(255,255,255,0.5);
 }
 
 .profile-modal-name {
@@ -494,119 +418,6 @@
   font-size: 24rpx;
   margin-top: 10rpx;
   opacity: 0.7;
-}
-
-.modal-title {
-  font-size: 40rpx;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
-  margin-bottom: 16rpx;
-}
-
-.modal-desc {
-  font-size: 28rpx;
-  color: #666;
-  text-align: center;
-  margin-bottom: 40rpx;
-}
-
-.password-input {
-  background: #f5f5f5;
-  border-radius: 16rpx;
-  padding: 24rpx;
-  font-size: 40rpx;
-  text-align: center;
-  letter-spacing: 20rpx;
-  margin-bottom: 20rpx;
-}
-
-.password-error {
-  color: #FF4D4F;
-  font-size: 26rpx;
-  margin-bottom: 30rpx;
-  text-align: center;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: space-around;
-}
-
-.btn-cancel {
-  background: #f5f5f5;
-  color: #666;
-  border: none;
-  border-radius: 40rpx;
-  padding: 20rpx 40rpx;
-  font-size: 30rpx;
-}
-
-.btn-confirm {
-  background: linear-gradient(135deg, #FF9500, #FFB347);
-  color: white;
-  border: none;
-  border-radius: 40rpx;
-  padding: 20rpx 40rpx;
-  font-size: 30rpx;
-  font-weight: bold;
-}
-
-/* 表单样式 */
-.form-group {
-  margin-bottom: 30rpx;
-}
-
-.form-label {
-  font-size: 28rpx;
-  color: #666;
-  margin-bottom: 12rpx;
-}
-
-.form-input {
-  background: #f5f5f5;
-  border-radius: 16rpx;
-  padding: 20rpx;
-  font-size: 32rpx;
-}
-
-.icon-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
-}
-
-.icon-option {
-  font-size: 40rpx;
-  padding: 12rpx;
-  border-radius: 12rpx;
-  background: #f5f5f5;
-  transition: all 0.3s;
-}
-
-.icon-option.selected {
-  background: #FFB347;
-  transform: scale(1.1);
-}
-
-.radio-group {
-  display: flex;
-  gap: 20rpx;
-}
-
-.radio-option {
-  flex: 1;
-  background: #f5f5f5;
-  border-radius: 16rpx;
-  padding: 20rpx;
-  text-align: center;
-  font-size: 28rpx;
-  transition: all 0.3s;
-}
-
-.radio-option.selected {
-  background: #FFB347;
-  color: white;
 }
 
 @keyframes bounce {

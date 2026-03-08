@@ -3,7 +3,10 @@
   <!-- 顶部用户信息 -->
   <view class="header card">
     <view class="user-info">
-      <view class="avatar">{{childProfile.avatar}}</view>
+      <view class="avatar">
+        <image wx:if="{{childProfile.avatarType === 'image'}}" class="avatar-image" src="{{childProfile.avatar}}" mode="aspectFill"></image>
+        <text wx:else>{{childProfile.avatar}}</text>
+      </view>
       <view class="nickname">{{childProfile.nickname}}</view>
     </view>
     <view class="points-info">

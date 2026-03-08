@@ -1,0 +1,365 @@
+/* pages/parent/parent.wxss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+
+/* 页面头部 */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 0 10rpx;
+}
+
+.back-btn {
+  font-size: 32rpx;
+  color: #667eea;
+  padding: 10rpx 20rpx;
+}
+
+.page-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.placeholder {
+  width: 100rpx;
+}
+
+/* 密码验证区域 */
+.password-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.password-card {
+  background: white;
+  border-radius: 32rpx;
+  padding: 60rpx 50rpx;
+  width: 80%;
+  max-width: 600rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.1);
+}
+
+.password-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.password-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 50rpx;
+}
+
+.password-input {
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  font-size: 48rpx;
+  text-align: center;
+  letter-spacing: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.password-error {
+  color: #FF4D4F;
+  font-size: 26rpx;
+  margin-bottom: 30rpx;
+}
+
+/* 通用卡片 */
+.card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.08);
+}
+
+.section {
+  margin-bottom: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 24rpx;
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-shadow: 0 2rpx 8rpx rgba(255, 149, 0, 0.25);
+}
+
+/* 列表项 */
+.item-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.item-card:last-child {
+  border-bottom: none;
+}
+
+.item-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 4rpx;
+}
+
+.item-detail {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.item-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.btn-edit {
+  color: #FF9500;
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+}
+
+.btn-delete {
+  color: #FF4D4F;
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: 60rpx 40rpx;
+  color: #999;
+  font-size: 28rpx;
+  background: #fafafa;
+  border-radius: 16rpx;
+  margin: 20rpx 0;
+}
+
+/* 设置项 */
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 0;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-label {
+  font-size: 32rpx;
+  color: #333;
+}
+
+.setting-action {
+  font-size: 28rpx;
+  color: #FF9500;
+}
+
+.setting-item.danger .setting-label {
+  color: #FF4D4F;
+}
+
+.setting-action.danger-text {
+  color: #FF4D4F;
+}
+
+/* 按钮 */
+.btn-confirm {
+  background: linear-gradient(135deg, #FF9500, #FFB347);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  padding: 24rpx 60rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  width: 100%;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+  border-radius: 40rpx;
+  padding: 24rpx 60rpx;
+  font-size: 32rpx;
+  width: 100%;
+}
+
+/* 弹窗 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 32rpx;
+  padding: 50rpx 40rpx;
+  width: 600rpx;
+  text-align: center;
+  animation: bounce 0.3s ease-in-out;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.form-modal {
+  width: 700rpx;
+  text-align: left;
+}
+
+.modal-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40rpx;
+}
+
+.modal-buttons .btn-cancel,
+.modal-buttons .btn-confirm {
+  width: 45%;
+  margin: 0;
+}
+
+/* 表单样式 */
+.form-group {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+}
+
+.form-input {
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  font-size: 32rpx;
+}
+
+.icon-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.icon-option {
+  font-size: 40rpx;
+  padding: 12rpx;
+  border-radius: 12rpx;
+  background: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.icon-option.selected {
+  background: #FFB347;
+  transform: scale(1.1);
+}
+
+.radio-group {
+  display: flex;
+  gap: 20rpx;
+}
+
+.radio-option {
+  flex: 1;
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  text-align: center;
+  font-size: 28rpx;
+  transition: all 0.3s;
+}
+
+.radio-option.selected {
+  background: #FFB347;
+  color: white;
+}
+
+.good-color {
+  color: #52C41A;
+}
+
+.bad-color {
+  color: #FF4D4F;
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

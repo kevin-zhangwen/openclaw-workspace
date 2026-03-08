@@ -22,6 +22,17 @@
 .avatar {
   font-size: 80rpx;
   margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-image {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2rpx solid rgba(255,255,255,0.5);
 }
 
 .nickname {

@@ -3,8 +3,10 @@
     "pages/index/index",
     "pages/achievement/achievement",
     "pages/mall/mall",
-    "pages/settings/settings"
+    "pages/settings/settings",
+    "pages/parent/parent"
   ],
+  "lazyCodeLoading": "requiredComponents",
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FF9500",
