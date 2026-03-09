@@ -71,9 +71,10 @@ Page({
     }).get().then(res => {
       if (res.data.length > 0) {
         const userData = res.data[0]
+        const points = userData.points !== undefined && userData.points !== null ? Number(userData.points) : 0
         this.setData({
           childProfile: userData.childProfile || this.data.childProfile,
-          points: userData.points || 0,
+          points: points,
           continuousDays: userData.continuousDays || 0
         })
         this.loadTasks()
@@ -172,8 +173,8 @@ Page({
   // 确认打卡
   confirmCheckIn: function (taskId, taskIndex, task) {
     const db = wx.cloud.database()
-    const pointsChange = task.type === 'good' ? task.points : -task.points
-    const newPoints = this.data.points + pointsChange
+    const pointsChange = task.type === 'good' ? Number(task.points) : -Number(task.points)
+    const newPoints = Number(this.data.points) + pointsChange
 
     // 更新任务状态
     db.collection('tasks').doc(taskId).update({
@@ -224,7 +225,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           const db = wx.cloud.database()
-          const pointsChange = task.type === 'good' ? -task.points : task.points
+          const pointsChange = task.type === 'good' ? -Number(task.points) : Number(task.points)
 
           db.collection('tasks').doc(taskId).update({
             data: {
@@ -250,7 +251,8 @@ Page({
   // 更新积分
   updatePoints: function (change) {
     const db = wx.cloud.database()
-    const newPoints = this.data.points + change
+    const currentPoints = this.data.points !== undefined && this.data.points !== null ? Number(this.data.points) : 0
+    const newPoints = currentPoints + Number(change)
 
     db.collection('users').where({
       openid: app.globalData.openid

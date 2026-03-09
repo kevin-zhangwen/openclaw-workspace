@@ -4,64 +4,7 @@ const app = getApp()
 Page({
   data: {
     points: 0,
-    rewards: [
-      {
-        id: '1',
-        name: '小贴纸',
-        icon: '🎨',
-        points: 50,
-        description: '精美卡通贴纸一张'
-      },
-      {
-        id: '2',
-        name: '看动画片 30 分钟',
-        icon: '📺',
-        points: 100,
-        description: '观看喜爱的动画片'
-      },
-      {
-        id: '3',
-        name: '小零食',
-        icon: '🍬',
-        points: 80,
-        description: '选择喜欢的小零食'
-      },
-      {
-        id: '4',
-        name: '去公园玩',
-        icon: '🎡',
-        points: 150,
-        description: '周末去公园游玩'
-      },
-      {
-        id: '5',
-        name: '新玩具',
-        icon: '🧸',
-        points: 300,
-        description: '挑选一个小玩具'
-      },
-      {
-        id: '6',
-        name: '冰淇淋',
-        icon: '🍦',
-        points: 60,
-        description: '美味冰淇淋一个'
-      },
-      {
-        id: '7',
-        name: '讲故事时间',
-        icon: '📚',
-        points: 40,
-        description: '爸爸妈妈讲故事'
-      },
-      {
-        id: '8',
-        name: '小礼物',
-        icon: '🎁',
-        points: 200,
-        description: '神秘小礼物一份'
-      }
-    ],
+    rewards: [],
     exchangeHistory: [],
     selectedReward: null,
     showConfirmDialog: false,
@@ -70,11 +13,13 @@ Page({
 
   onLoad: function () {
     this.loadUserData()
+    this.loadRewards()
     this.loadExchangeHistory()
   },
 
   onShow: function () {
     this.loadUserData()
+    this.loadRewards()
   },
 
   // 加载用户数据
@@ -98,9 +43,30 @@ Page({
     }).get().then(res => {
       if (res.data.length > 0) {
         this.setData({
-          points: res.data[0].points || 0
+          points: Number(res.data[0].points) || 0
         })
       }
+    })
+  },
+
+  // 加载奖励列表
+  loadRewards: function () {
+    const db = wx.cloud.database()
+    const openid = app.globalData.openid
+
+    if (!openid) {
+      return
+    }
+
+    db.collection('rewards').where({
+      createdBy: openid
+    }).get().then(res => {
+      this.setData({
+        rewards: res.data
+      })
+    }).catch(err => {
+      console.error('加载奖励失败:', err)
+      this.setData({ rewards: [] })
     })
   },
 
@@ -141,7 +107,7 @@ Page({
     const reward = this.data.selectedReward
     const db = wx.cloud.database()
     const openid = app.globalData.openid
-    const newPoints = this.data.points - reward.points
+    const newPoints = Number(this.data.points) - Number(reward.points)
 
     // 扣除积分
     db.collection('users').where({
