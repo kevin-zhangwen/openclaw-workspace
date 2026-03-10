@@ -7,23 +7,23 @@
 
   <view class="badge-grid">
     <view 
-      class="badge-card card {{badge.unlocked ? 'unlocked' : 'locked'}}"
+      class="badge-card card {{item.unlocked ? 'unlocked' : 'locked'}}"
       wx:for="{{badges}}"
-      wx:key="id"
+      wx:key="*this"
       data-index="{{index}}"
       bindtap="viewBadgeDetail"
     >
-      <view class="badge-icon">{{badge.unlocked ? badge.icon : '🔒'}}</view>
-      <view class="badge-name">{{badge.name}}</view>
-      <view class="badge-status" wx:if="{{badge.unlocked}}">
-        <view class="unlock-date">{{badge.unlockDate ? '已解锁' : ''}}</view>
+      <view class="badge-icon">{{item.unlocked ? item.icon : '🔒'}}</view>
+      <view class="badge-name">{{item.name}}</view>
+      <view class="badge-status" wx:if="{{item.unlocked}}">
+        <view class="unlock-date">已解锁</view>
       </view>
     </view>
   </view>
 
   <!-- 徽章详情弹窗 -->
   <view class="modal-overlay {{showBadgeDetail ? 'show' : ''}}" wx:if="{{showBadgeDetail}}" bindtap="closeBadgeDetail">
-    <view class="modal-content" catchtap="true">
+    <view class="modal-content" catchtap="preventBubble">
       <view class="modal-badge-icon">{{selectedBadge.icon}}</view>
       <view class="modal-badge-name">{{selectedBadge.name}}</view>
       <view class="modal-badge-desc">{{selectedBadge.description}}</view>
