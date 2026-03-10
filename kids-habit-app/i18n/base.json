@@ -1,0 +1,11 @@
+{
+	"ios": {
+		"name": "kids-habit"
+	},
+	"android": {
+		"name": "kids-habit"
+	},
+	"common": {
+		"name": "kids-habit"
+	}
+}

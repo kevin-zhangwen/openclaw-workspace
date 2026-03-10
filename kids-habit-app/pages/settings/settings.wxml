@@ -148,4 +148,21 @@
     </view>
   </view>
 
+  <!-- 头像选择器弹窗 -->
+  <view class="modal-overlay {{showAvatarPicker ? 'show' : ''}}" wx:if="{{showAvatarPicker}}" bindtap="closeAvatarPicker">
+    <view class="modal-content avatar-picker-modal" catchtap="true">
+      <view class="modal-close" bindtap="closeAvatarPicker">✕</view>
+      <view class="modal-title">选择头像</view>
+      <view class="avatar-grid">
+        <view 
+          class="avatar-option {{childProfile.avatar === item ? 'selected' : ''}}" 
+          wx:for="{{avatarOptions}}" 
+          wx:key="*this"
+          data-avatar="{{item}}"
+          bindtap="selectPresetAvatar"
+        >{{item}}</view>
+      </view>
+    </view>
+  </view>
+
 </view>
