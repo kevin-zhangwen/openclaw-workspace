@@ -126,16 +126,15 @@ Page({
         })
         wx.setStorageSync('lastResetDate', today)
         
-        // 更新数据库
-        const batch = db.batch()
-        tasks.forEach(task => {
-          batch.update({
-            collection: 'tasks',
-            doc: task._id,
+        // 更新数据库 - 使用 Promise.all 批量更新
+        const updatePromises = tasks.map(task => {
+          return db.collection('tasks').doc(task._id).update({
             data: { completedToday: false }
           })
         })
-        batch.commit()
+        Promise.all(updatePromises).catch(err => {
+          console.error('批量更新任务失败:', err)
+        })
       }
 
       // 计算今日完成情况
@@ -173,6 +172,14 @@ Page({
   // 确认打卡
   confirmCheckIn: function (taskId, taskIndex, task) {
     const db = wx.cloud.database()
+    const openid = app.globalData.openid
+    
+    // 确保 openid 已获取
+    if (!openid) {
+      wx.showToast({ title: '请稍后再试', icon: 'none' })
+      return
+    }
+    
     const pointsChange = task.type === 'good' ? Number(task.points) : -Number(task.points)
     const newPoints = Number(this.data.points) + pointsChange
 
@@ -207,6 +214,7 @@ Page({
       }
 
       // 检查第一次打卡徽章
+      console.log('准备检查第一次打卡徽章')
       this.checkFirstCheckin()
 
       // 检查积分达人徽章
@@ -276,9 +284,15 @@ Page({
     const db = wx.cloud.database()
     const today = new Date().toISOString().split('T')[0]
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]
+    const openid = app.globalData.openid
+
+    if (!openid) {
+      console.error('检查连续打卡失败: openid 为空')
+      return
+    }
 
     db.collection('users').where({
-      openid: app.globalData.openid
+      openid: openid
     }).get().then(res => {
       if (res.data.length > 0) {
         const userData = res.data[0]
@@ -303,8 +317,12 @@ Page({
           this.setData({ continuousDays: newContinuousDays })
           // 检查连续打卡徽章
           this.checkContinuousBadges(newContinuousDays)
+        }).catch(err => {
+          console.error('更新连续打卡天数失败:', err)
         })
       }
+    }).catch(err => {
+      console.error('检查连续打卡失败:', err)
     })
   },
 
@@ -325,15 +343,23 @@ Page({
     const db = wx.cloud.database()
     const openid = app.globalData.openid
 
+    if (!openid) {
+      console.error('解锁徽章失败: openid 为空')
+      return
+    }
+
+    console.log('解锁徽章:', badgeId, 'openid:', openid)
+
     db.collection('achievements').where({
       openid: openid
     }).get().then(res => {
+      console.log('查询成就记录:', res.data)
       if (res.data.length > 0) {
         const userAchievements = res.data[0]
         const badges = userAchievements.badges || []
         
-        // 检查是否已解锁
-        const exists = badges.find(b => b.id === badgeId)
+        // 检查是否已解锁（使用宽松比较，因为 id 可能存储为不同类型）
+        const exists = badges.find(b => b && String(b.id) === String(badgeId))
         if (!exists) {
           badges.push({
             id: badgeId,
@@ -343,12 +369,18 @@ Page({
           db.collection('achievements').doc(userAchievements._id).update({
             data: { badges }
           }).then(() => {
+            console.log('更新成就成功:', badgeId)
             // 显示解锁提示
             this.showBadgeUnlock(badgeId)
+          }).catch(err => {
+            console.error('更新成就失败:', err)
           })
+        } else {
+          console.log('徽章已存在，无需重复解锁:', badgeId)
         }
       } else {
         // 创建新记录
+        console.log('创建新成就记录')
         db.collection('achievements').add({
           data: {
             openid: openid,
@@ -358,9 +390,14 @@ Page({
             }]
           }
         }).then(() => {
+          console.log('创建成就记录成功:', badgeId)
           this.showBadgeUnlock(badgeId)
+        }).catch(err => {
+          console.error('创建成就记录失败:', err)
         })
       }
+    }).catch(err => {
+      console.error('查询成就失败:', err)
     })
   },
 
@@ -397,19 +434,37 @@ Page({
     const db = wx.cloud.database()
     const openid = app.globalData.openid
 
+    if (!openid) {
+      console.error('检查第一次打卡失败: openid 为空')
+      return
+    }
+
+    console.log('========== 检查第一次打卡徽章 ==========')
+    console.log('openid:', openid)
+
     db.collection('achievements').where({
       openid: openid
     }).get().then(res => {
+      console.log('查询成就记录结果:', res.data)
       if (res.data.length === 0) {
         // 还没有成就记录，解锁第一次打卡徽章
+        console.log('没有成就记录，准备解锁第一次打卡徽章')
         this.unlockBadge('first_checkin')
       } else {
         const badges = res.data[0].badges || []
-        const hasFirstCheckin = badges.find(b => b.id === 'first_checkin')
+        console.log('已有徽章列表:', badges.map(b => b ? b.id : 'null'))
+        const hasFirstCheckin = badges.find(b => b && String(b.id) === 'first_checkin')
+        console.log('是否已解锁第一次打卡:', hasFirstCheckin)
         if (!hasFirstCheckin) {
+          console.log('准备解锁第一次打卡徽章')
           this.unlockBadge('first_checkin')
+        } else {
+          console.log('第一次打卡徽章已解锁，跳过')
         }
       }
+      console.log('========== 检查结束 ==========')
+    }).catch(err => {
+      console.error('检查第一次打卡失败:', err)
     })
   },
 

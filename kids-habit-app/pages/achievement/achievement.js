@@ -180,8 +180,10 @@ Page({
 
       // 排序：已解锁的排在前面，未解锁的排在后面
       updatedBadges.sort((a, b) => {
-        if (a.unlocked && !b.unlocked) return -1
-        if (!a.unlocked && b.unlocked) return 1
+        const aUnlocked = Boolean(a.unlocked)
+        const bUnlocked = Boolean(b.unlocked)
+        if (aUnlocked && !bUnlocked) return -1
+        if (!aUnlocked && bUnlocked) return 1
         return 0
       })
 

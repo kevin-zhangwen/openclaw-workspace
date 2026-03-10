@@ -49,19 +49,19 @@
     <view class="section-title">📋 今日任务</view>
     
     <view class="task-list">
-      <view 
-        class="task-card card {{task.completedToday ? 'completed' : ''}} {{task.type === 'bad' ? 'bad-task' : 'good-task'}}"
+      <view
+        class="task-card card {{item.completedToday ? 'completed' : ''}} {{item.type === 'bad' ? 'bad-task' : 'good-task'}}"
         wx:for="{{tasks}}"
         wx:key="_id"
         data-id="{{item._id}}"
         data-index="{{index}}"
         bindtap="checkInTask"
       >
-        <view class="task-icon">{{task.icon}}</view>
+        <view class="task-icon">{{item.icon}}</view>
         <view class="task-info">
-          <view class="task-name">{{task.name}}</view>
-          <view class="task-points {{task.type === 'good' ? 'good-color' : 'bad-color'}}">
-            {{task.type === 'good' ? '+' : '-'}}{{task.points}} 积分
+          <view class="task-name">{{item.name}}</view>
+          <view class="task-points {{item.type === 'good' ? 'good-color' : 'bad-color'}}">
+            {{item.type === 'good' ? '+' : '-'}}{{item.points}} 积分
           </view>
         </view>
         <view class="task-status">

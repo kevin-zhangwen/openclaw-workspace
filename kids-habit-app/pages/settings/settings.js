@@ -25,6 +25,7 @@ Page({
     },
     recentBadges: [],
     showProfileDetailModal: false,
+    showAvatarPicker: false,
     avatarOptions: ['😊', '😄', '🥳', '🤩', '😎', '🤠', '👧', '👦', '🐶', '🐱', '🐼', '🦁', '🐯', '🐸', '🐵', '🦄']
   },
 
@@ -107,7 +108,7 @@ Page({
       if (res.data.length > 0) {
         const userData = res.data[0]
         this.setData({
-          points: userData.points || 0,
+          points: Number(userData.points) || 0,
           continuousDays: userData.continuousDays || 0
         })
         
@@ -197,7 +198,7 @@ Page({
         const userData = res.data[0]
         this.setData({
           childProfile: userData.childProfile || this.data.childProfile,
-          points: userData.points || 0,
+          points: Number(userData.points) || 0,
           continuousDays: userData.continuousDays || 0,
           'settings.soundEnabled': userData.soundEnabled !== false,
           'settings.passwordSet': !!userData.password
@@ -313,8 +314,133 @@ Page({
 
   // 进入家长设置区
   enterParentZone: function () {
+    if (this.data._navigating) return
+    this.setData({ _navigating: true })
     wx.navigateTo({
-      url: '/pages/parent/parent'
+      url: '/pages/parent/parent',
+      complete: () => {
+        setTimeout(() => {
+          this.setData({ _navigating: false })
+        }, 500)
+      }
+    })
+  },
+
+  // 选择头像（从相册或预设表情）
+  chooseAvatarFromAlbum: function () {
+    const that = this
+    wx.showActionSheet({
+      itemList: ['从相册选择', '选择预设头像'],
+      success: function (res) {
+        if (res.tapIndex === 0) {
+          that.chooseImageAvatar()
+        } else if (res.tapIndex === 1) {
+          that.setData({ showAvatarPicker: true })
+        }
+      }
+    })
+  },
+
+  // 从相册选择图片头像
+  chooseImageAvatar: function () {
+    const that = this
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: function (res) {
+        const tempFilePath = res.tempFiles[0].tempFilePath
+        that.uploadAvatar(tempFilePath)
+      }
+    })
+  },
+
+  // 上传头像到云存储
+  uploadAvatar: function (tempFilePath) {
+    const that = this
+    const openid = app.globalData.openid
+    const cloudPath = `avatars/${openid}_${Date.now()}.jpg`
+
+    wx.showLoading({ title: '上传中...', mask: true })
+
+    wx.cloud.uploadFile({
+      cloudPath: cloudPath,
+      filePath: tempFilePath,
+      success: function (res) {
+        that.setData({
+          'childProfile.avatar': res.fileID,
+          'childProfile.avatarType': 'image'
+        })
+        wx.hideLoading()
+        wx.showToast({ title: '头像已更新', icon: 'success' })
+      },
+      fail: function (err) {
+        wx.hideLoading()
+        console.error('上传头像失败:', err)
+        wx.showToast({ title: '上传失败', icon: 'error' })
+      }
+    })
+  },
+
+  // 选择预设头像
+  selectPresetAvatar: function (e) {
+    const avatar = e.currentTarget.dataset.avatar
+    this.setData({
+      'childProfile.avatar': avatar,
+      'childProfile.avatarType': 'emoji',
+      showAvatarPicker: false
+    })
+  },
+
+  // 关闭头像选择器
+  closeAvatarPicker: function () {
+    this.setData({ showAvatarPicker: false })
+  },
+
+  // 昵称输入
+  onNicknameInput: function (e) {
+    this.setData({
+      'childProfile.nickname': e.detail.value
+    })
+  },
+
+  // 保存孩子档案
+  updateChildProfile: function () {
+    const db = wx.cloud.database()
+    const openid = app.globalData.openid
+    const childProfile = this.data.childProfile
+
+    if (!childProfile.nickname || childProfile.nickname.trim() === '') {
+      wx.showToast({ title: '请输入昵称', icon: 'none' })
+      return
+    }
+
+    wx.showLoading({ title: '保存中...', mask: true })
+
+    db.collection('users').where({
+      openid: openid
+    }).get().then(res => {
+      if (res.data.length > 0) {
+        db.collection('users').doc(res.data[0]._id).update({
+          data: {
+            childProfile: childProfile
+          }
+        }).then(() => {
+          wx.hideLoading()
+          wx.showToast({ title: '保存成功', icon: 'success' })
+        }).catch(err => {
+          wx.hideLoading()
+          console.error('保存档案失败:', err)
+          wx.showToast({ title: '保存失败', icon: 'error' })
+        })
+      } else {
+        wx.hideLoading()
+        wx.showToast({ title: '用户数据不存在', icon: 'none' })
+      }
+    }).catch(err => {
+      wx.hideLoading()
+      console.error('查询用户失败:', err)
+      wx.showToast({ title: '保存失败', icon: 'error' })
     })
   }
 })
